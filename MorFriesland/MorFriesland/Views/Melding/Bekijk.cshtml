@@ -1,0 +1,72 @@
+﻿@model MorFriesland.Models.Melding
+
+@{
+    ViewData["Title"] = "Bekijk";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Melding</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Beschrijving)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Beschrijving)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Foto)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Foto)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Long)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Long)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Lat)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Lat)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Opgelosttijd)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Opgelosttijd)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Gearchiveerd)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Gearchiveerd)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Categorie)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Categorie.Id)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Melder)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Melder.Id)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Bewerk" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

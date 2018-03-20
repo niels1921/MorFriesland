@@ -1,0 +1,76 @@
+﻿@model MorFriesland.Models.Melding
+
+@{
+    ViewData["Title"] = "Bewerk";
+}
+
+<h2>Edit</h2>
+
+<h4>Melding</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Categorie_Id" class="control-label"></label>
+                <select asp-for="Categorie_Id" class="form-control" asp-items="ViewBag.Categorie_Id"></select>
+                <span asp-validation-for="Categorie_Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Beschrijving" class="control-label"></label>
+                <input asp-for="Beschrijving" class="form-control" />
+                <span asp-validation-for="Beschrijving" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Foto" class="control-label"></label>
+                <input asp-for="Foto" class="form-control" />
+                <span asp-validation-for="Foto" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Long" class="control-label"></label>
+                <input asp-for="Long" class="form-control" />
+                <span asp-validation-for="Long" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Lat" class="control-label"></label>
+                <input asp-for="Lat" class="form-control" />
+                <span asp-validation-for="Lat" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Opgelosttijd" class="control-label"></label>
+                <input asp-for="Opgelosttijd" class="form-control" />
+                <span asp-validation-for="Opgelosttijd" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="Gearchiveerd" /> @Html.DisplayNameFor(model => model.Gearchiveerd)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="User_id" class="control-label"></label>
+                <select asp-for="User_id" class="form-control" asp-items="ViewBag.User_id"></select>
+                <span asp-validation-for="User_id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
