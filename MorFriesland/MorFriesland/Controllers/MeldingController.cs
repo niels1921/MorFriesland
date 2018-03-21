@@ -35,6 +35,13 @@ namespace MorFriesland.Controllers
         }
 
         // GET: Melding
+        public async Task<IActionResult> Beheer()
+        {
+            var applicationDbContext = _context.Melding.Include(m => m.Categorie).Include(m => m.Melder);
+            return View(await applicationDbContext.ToListAsync());
+        }
+
+        // GET: Melding
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Melding.Include(m => m.Categorie).Include(m => m.Melder);

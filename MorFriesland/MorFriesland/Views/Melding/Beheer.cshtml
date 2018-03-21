@@ -1,0 +1,83 @@
+﻿@model IEnumerable<MorFriesland.Models.Melding>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Nieuw">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Beschrijving)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Foto)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Long)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Lat)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Opgelosttijd)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Gearchiveerd)
+                </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Categorie)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Melder)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Beschrijving)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Foto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Long)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Lat)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Opgelosttijd)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Gearchiveerd)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Categorie.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Melder.Id)
+            </td>
+            <td>
+                <a asp-action="Bewerk" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Bekijk" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Verwijder" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
