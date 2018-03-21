@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
+using MorFriesland.Data;
 using MorFriesland.Models;
 using MorFriesland.Models.AccountViewModels;
 using MorFriesland.Services;
@@ -18,6 +20,7 @@ namespace MorFriesland.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ApplicationDbContext _context;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
@@ -25,12 +28,14 @@ namespace MorFriesland.Controllers
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
+            ApplicationDbContext context,
             RoleManager<IdentityRole> roleManager,
             IEmailSender emailSender,
             ILogger<AccountController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
             _emailSender = emailSender;
             _logger = logger;
             _roleManager = roleManager;
@@ -445,13 +450,23 @@ namespace MorFriesland.Controllers
              return Json(_roleManager.Roles);
         }
 
-        public async Task<IActionResult> AddUserRole(string username, string role)
+        [HttpGet]
+        [Authorize(Roles = "admin")]
+        public IActionResult AddUserRole()
+        {
+            ViewData["UserName"] = new SelectList(_context.Users, "UserName", "UserName");
+            ViewData["Name"] = new SelectList(_context.Roles, "Name", "Name");
+            return View();
+
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddUserRole(string username, string name)
         { 
             ApplicationUser user = await _userManager.FindByEmailAsync(username);
 
-            if (!User.IsInRole(role))
-            {
-                await _userManager.AddToRoleAsync(user, role);
+            if (!User.IsInRole(name))
+            { 
+                await _userManager.AddToRoleAsync(user, name);
             }
             
 
