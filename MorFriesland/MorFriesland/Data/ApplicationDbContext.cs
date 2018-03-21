@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MorFriesland.Models;
+using MorFriesland.Models.AccountViewModels;
 
 namespace MorFriesland.Data
 {
@@ -26,5 +27,7 @@ namespace MorFriesland.Data
         public DbSet<MorFriesland.Models.Melding> Melding { get; set; }
 
         public DbSet<MorFriesland.Models.Categorie> Categorie { get; set; }
+
+        public DbSet<MorFriesland.Models.AccountViewModels.AddRoleUserViewModel> AddRoleUserViewModel { get; set; }
     }
 }
