@@ -94,7 +94,7 @@ function initMap() {
     getLocation();
 
  }
-
+//toggle
 function toggleBounce() {
 
 
