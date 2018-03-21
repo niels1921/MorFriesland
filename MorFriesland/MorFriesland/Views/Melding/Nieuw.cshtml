@@ -4,17 +4,55 @@
     ViewData["Title"] = "Nieuw";
 }
 
-<h2>Create</h2>
+<style>
+    /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+
+    .controls {
+        background-color: #fff;
+        border-radius: 2px;
+        border: 1px solid transparent;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        box-sizing: border-box;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        height: 29px;
+        margin-left: 17px;
+        margin-top: 10px;
+        outline: none;
+        padding: 0 11px 0 13px;
+        text-overflow: ellipsis;
+        width: 400px;
+    }
+
+        .controls:focus {
+            border-color: #4d90fe;
+        }
+
+    .title {
+        font-weight: bold;
+    }
+
+    #infowindow-content {
+        display: none;
+    }
+
+    #map #infowindow-content {
+        display: inline;
+    }
+</style>
+<h2>Nieuwe</h2>
 
 <h4>Melding</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Nieuw" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Categorie_Id" class="control-label"></label>
-                <select asp-for="Categorie_Id" class ="form-control" asp-items="ViewBag.Categorie_Id"></select>
+                <select asp-for="Categorie_Id" class="form-control" asp-items="ViewBag.Categorie_Id"></select>
             </div>
             <div class="form-group">
                 <label asp-for="Beschrijving" class="control-label"></label>
@@ -23,46 +61,48 @@
             </div>
             <div class="form-group">
                 <label asp-for="Foto" class="control-label"></label>
-                <input asp-for="Foto" class="form-control" />
+
+                @*<img src="~/Uploads/@Model.Naam/@Model.Profiel_foto" class="profilePicture" />*@
+                <input type="hidden" asp-for="Foto" />
+
+                <input type="file" name="Image" />
                 <span asp-validation-for="Foto" class="text-danger"></span>
+
             </div>
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
+
+            <input type="hidden" id="nieuwlong" asp-for="Long" class="form-control" />
+            <input type="hidden" id="nieuwlat" asp-for="Lat" class="form-control" />
+
+
+
             <div class="form-group">
-                <label asp-for="Long" class="control-label"></label>
-                <input asp-for="Long" class="form-control" />
-                <span asp-validation-for="Long" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Lat" class="control-label"></label>
-                <input asp-for="Lat" class="form-control" />
-                <span asp-validation-for="Lat" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Opgelosttijd" class="control-label"></label>
-                <input asp-for="Opgelosttijd" class="form-control" />
-                <span asp-validation-for="Opgelosttijd" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="Gearchiveerd" /> @Html.DisplayNameFor(model => model.Gearchiveerd)
-                    </label>
-                </div>
-            </div>
-            <div class="form-group">
-                <label asp-for="User_id" class="control-label"></label>
-                <select asp-for="User_id" class ="form-control" asp-items="ViewBag.User_id"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Nieuw" class="btn btn-default" />
             </div>
         </form>
     </div>
+    <div class="col-md-8">
+        <input id="pac-input" class="controls" type="text"
+               placeholder="Zoek een locatie">
+        <div class="nieuwemap" id="map"></div>
+        <div id="infowindow-content">
+            <span id="place-name" class="title"></span><br>
+
+            <span id="place-address"></span>
+        </div>
+        <script src="~/js/nieuwemelding.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCK3VEpVPHSGvBnYuGfLUYYtj1MnJ4rPWg&libraries=places&callback=initMap" async defer></script>
+
+
+
+    </div>
 </div>
+
+
 
 <div>
     <a asp-action="Index">Back to List</a>

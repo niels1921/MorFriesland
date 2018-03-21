@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,11 +17,21 @@ namespace MorFriesland.Controllers
 {
     public class MeldingController : Controller
     {
+
+        private readonly UserManager<ApplicationUser> _userManager;
+
         private readonly ApplicationDbContext _context;
 
-        public MeldingController(ApplicationDbContext context)
+        private IHostingEnvironment _Environment;
+
+
+        public MeldingController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment environment)
         {
             _context = context;
+            _userManager = userManager;
+            _Environment = environment;
+
+
         }
 
         // GET: Melding
@@ -49,7 +64,7 @@ namespace MorFriesland.Controllers
         // GET: Melding/Create
         public IActionResult Nieuw()
         {
-            ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Id", "Id");
+            ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Id", "Naam");
             ViewData["User_id"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
@@ -59,15 +74,55 @@ namespace MorFriesland.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Nieuw([Bind("Id,Categorie_Id,Beschrijving,Foto,Email,Long,Lat,Opgelosttijd,Gearchiveerd,User_id")] Melding melding)
+        public async Task<IActionResult> Nieuw([Bind("Id,Categorie_Id,Beschrijving,Foto,Email,Long,Lat,Opgelosttijd,Gearchiveerd,User_id")] Melding melding, IFormFile Image)
         {
+            string userId = this.User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
+
+            ApplicationUser user = (from x in _context.Users
+                            where x.Id == userId
+                            select x).SingleOrDefault();
+
+
             if (ModelState.IsValid)
             {
+
+                if (Image != null)
+                {
+
+                    string uploadPatch = Path.Combine(_Environment.WebRootPath, "uploads");
+                    Directory.CreateDirectory(Path.Combine(uploadPatch, melding.Id.ToString()));
+
+                    string FileName = Image.FileName;
+                    if (FileName.Contains('\\'))
+                    {
+                        FileName = FileName.Split('\\').Last();
+                    }
+
+                    using (var stream = new FileStream(Path.Combine(uploadPatch, melding.Id.ToString(), FileName), FileMode.Create))
+                    {
+                        await Image.CopyToAsync(stream);
+                    }
+                    melding.Foto = FileName;
+                }
+
+                melding.Gearchiveerd = false;
+
+                if (user != null)
+                {
+                    melding.Email = user.Email;
+                    melding.User_id = userId;
+                    melding.Melder = user;
+                }
+                else
+                {
+                    melding.User_id = null;
+                }
+
                 _context.Add(melding);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Id", "Id", melding.Categorie_Id);
+            ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Id", "Naam", melding.Categorie_Id);
             ViewData["User_id"] = new SelectList(_context.Users, "Id", "Id", melding.User_id);
             return View(melding);
         }

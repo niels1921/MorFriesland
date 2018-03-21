@@ -24,5 +24,7 @@ namespace MorFriesland.Data
         }
 
         public DbSet<MorFriesland.Models.Melding> Melding { get; set; }
+
+        public DbSet<MorFriesland.Models.Categorie> Categorie { get; set; }
     }
 }
