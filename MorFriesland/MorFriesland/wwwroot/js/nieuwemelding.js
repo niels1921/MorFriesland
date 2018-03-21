@@ -39,6 +39,7 @@ function initMap() {
         Locationmarker.addListener('drag', Ondrag);
         Locationmarker.addListener('dragend', Ondrag);
 
+        //Input uit textbox
         var input = document.getElementById('pac-input');
 
         var autocomplete = new google.maps.places.Autocomplete(input);
