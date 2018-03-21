@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MorFriesland.Data;
 using MorFriesland.Models;
+using MorFriesland.Models.ViewModels;
 
 namespace MorFriesland.Controllers
 {
@@ -73,7 +74,16 @@ namespace MorFriesland.Controllers
         {
             ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Id", "Naam");
             ViewData["User_id"] = new SelectList(_context.Users, "Id", "Id");
-            return View();
+
+            MeldingVM meldingen = new MeldingVM();
+
+            var Meldingen = from Melding in _context.Melding
+                        select Melding;
+
+            meldingen.Meldingen = Meldingen;
+
+
+            return View(meldingen);
         }
 
         // POST: Melding/Create
@@ -88,6 +98,8 @@ namespace MorFriesland.Controllers
             ApplicationUser user = (from x in _context.Users
                             where x.Id == userId
                             select x).SingleOrDefault();
+
+
 
 
             if (ModelState.IsValid)
