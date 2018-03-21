@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using MorFriesland.Models;
 using MorFriesland.Models.AccountViewModels;
 using MorFriesland.Services;
+using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace MorFriesland.Controllers
 {
@@ -22,12 +18,14 @@ namespace MorFriesland.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
+            RoleManager<IdentityRole> roleManager,
             IEmailSender emailSender,
             ILogger<AccountController> logger)
         {
@@ -35,6 +33,7 @@ namespace MorFriesland.Controllers
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
+            _roleManager = roleManager;
         }
 
         [TempData]
@@ -436,6 +435,30 @@ namespace MorFriesland.Controllers
         {
             return View();
         }
+
+        public async Task<IActionResult> AddRole(string role)
+        {
+            if (!await _roleManager.RoleExistsAsync(role))
+            {
+                await _roleManager.CreateAsync(new IdentityRole(role));
+            }
+             return Json(_roleManager.Roles);
+        }
+
+        public async Task<IActionResult> AddUserRole(string username, string role)
+        { 
+            ApplicationUser user = await _userManager.FindByEmailAsync(username);
+
+            if (!User.IsInRole(role))
+            {
+                await _userManager.AddToRoleAsync(user, role);
+            }
+            
+
+            return Json(await _userManager.GetRolesAsync(user));
+        }
+
+
 
         #region Helpers
 
