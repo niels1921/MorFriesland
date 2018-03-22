@@ -9,7 +9,7 @@ namespace MorFriesland.Models
     public class Melding
     {
         public int Id { get; set; }
-
+        public string Naam { get; set; }
 
         public int Categorie_Id { get; set; }
         [ForeignKey("Categorie_Id")]

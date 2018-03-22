@@ -99,8 +99,12 @@ namespace MorFriesland.Controllers
                             where x.Id == userId
                             select x).SingleOrDefault();
 
+            Categorie categorienaam = (from cat in _context.Categorie
+                           where cat.Id == melding.Categorie_Id
+                           select cat).SingleOrDefault();
 
 
+            melding.Naam = categorienaam.Naam;
 
             if (ModelState.IsValid)
             {
@@ -222,14 +226,14 @@ namespace MorFriesland.Controllers
         }
 
         // POST: Melding/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("Verwijder")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var melding = await _context.Melding.SingleOrDefaultAsync(m => m.Id == id);
             _context.Melding.Remove(melding);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Beheer));
         }
 
         private bool MeldingExists(int id)

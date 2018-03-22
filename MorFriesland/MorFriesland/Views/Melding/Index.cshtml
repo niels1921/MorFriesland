@@ -11,21 +11,22 @@
 </p>
 
 <div class="col-md-12">
-<input id="pac-input" class="controls" type="text"
-       placeholder="Zoek een locatie">
-<div class="nieuwemap" id="map"></div>
-<div id="infowindow-content">
-    <span id="place-name" class="title"></span><br>
+    <input id="pac-input" class="controls" type="text"
+           placeholder="Zoek een locatie">
+    <div class="nieuwemap" id="map"></div>
+    <div id="infowindow-content">
+        <span id="place-name" class="title"></span><br>
 
-    <span id="place-address"></span>
-</div>
-<script src="~/js/allemeldingen.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCK3VEpVPHSGvBnYuGfLUYYtj1MnJ4rPWg&libraries=places&callback=initMap" async defer></script>
+        <span id="place-address"></span>
     </div>
+    <script src="~/js/allemeldingen.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCK3VEpVPHSGvBnYuGfLUYYtj1MnJ4rPWg&libraries=places&callback=initMap" async defer></script>
+</div>
 
 @foreach (var item in Model)
 {
 
+    <div id="meldingen" data-lat="@item.Lat" data-lng="@item.Long" data-name="@item.Naam"></div>
 
 
 }
