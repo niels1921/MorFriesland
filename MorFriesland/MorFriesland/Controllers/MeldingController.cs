@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MorFriesland.Data;
 using MorFriesland.Models;
+using MorFriesland.Models.ViewModels;
 
 namespace MorFriesland.Controllers
 {
@@ -32,6 +33,22 @@ namespace MorFriesland.Controllers
             _Environment = environment;
 
 
+        }
+
+        // GET: Melding
+        public async Task<IActionResult> MijnMeldingen(Melding melding)
+        {
+            string userId = this.User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
+
+            ApplicationUser user = (from x in _context.Users
+                                    where x.Id == userId
+                                    select x).SingleOrDefault();
+
+            var meldingen = from a in _context.Melding
+                            where a.User_id == user.Id
+                            select a;
+
+            return View(await meldingen.ToListAsync());
         }
 
         // GET: Melding
@@ -66,7 +83,16 @@ namespace MorFriesland.Controllers
         {
             ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Id", "Naam");
             ViewData["User_id"] = new SelectList(_context.Users, "Id", "Id");
-            return View();
+
+            MeldingVM meldingen = new MeldingVM();
+
+            var Meldingen = from Melding in _context.Melding
+                        select Melding;
+
+            meldingen.Meldingen = Meldingen;
+
+
+            return View(meldingen);
         }
 
         // POST: Melding/Create
@@ -82,6 +108,12 @@ namespace MorFriesland.Controllers
                             where x.Id == userId
                             select x).SingleOrDefault();
 
+            Categorie categorienaam = (from cat in _context.Categorie
+                           where cat.Id == melding.Categorie_Id
+                           select cat).SingleOrDefault();
+
+
+            melding.Naam = categorienaam.Naam;
 
             if (ModelState.IsValid)
             {
@@ -90,7 +122,7 @@ namespace MorFriesland.Controllers
                 {
 
                     string uploadPatch = Path.Combine(_Environment.WebRootPath, "uploads");
-                    Directory.CreateDirectory(Path.Combine(uploadPatch, melding.Id.ToString()));
+                    Directory.CreateDirectory(Path.Combine(uploadPatch, melding.Naam));
 
                     string FileName = Image.FileName;
                     if (FileName.Contains('\\'))
@@ -98,7 +130,7 @@ namespace MorFriesland.Controllers
                         FileName = FileName.Split('\\').Last();
                     }
 
-                    using (var stream = new FileStream(Path.Combine(uploadPatch, melding.Id.ToString(), FileName), FileMode.Create))
+                    using (var stream = new FileStream(Path.Combine(uploadPatch, melding.Naam, FileName), FileMode.Create))
                     {
                         await Image.CopyToAsync(stream);
                     }
@@ -203,18 +235,18 @@ namespace MorFriesland.Controllers
         }
 
         // POST: Melding/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("Verwijder")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var melding = await _context.Melding.SingleOrDefaultAsync(m => m.Id == id);
             _context.Melding.Remove(melding);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(MijnMeldingen));
         }
 
         private bool MeldingExists(int id)
-        {
+        {   
             return _context.Melding.Any(e => e.Id == id);
         }
     }

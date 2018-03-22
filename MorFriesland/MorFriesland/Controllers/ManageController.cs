@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -8,8 +9,10 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MorFriesland.Data;
 using MorFriesland.Models;
 using MorFriesland.Models.ManageViewModels;
 using MorFriesland.Services;
@@ -22,6 +25,7 @@ namespace MorFriesland.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ApplicationDbContext _context;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
         private readonly UrlEncoder _urlEncoder;
@@ -32,12 +36,14 @@ namespace MorFriesland.Controllers
         public ManageController(
           UserManager<ApplicationUser> userManager,
           SignInManager<ApplicationUser> signInManager,
+          ApplicationDbContext context,
           IEmailSender emailSender,
           ILogger<ManageController> logger,
           UrlEncoder urlEncoder)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
             _emailSender = emailSender;
             _logger = logger;
             _urlEncoder = urlEncoder;
@@ -490,7 +496,23 @@ namespace MorFriesland.Controllers
 
             return View(nameof(ShowRecoveryCodes), model);
         }
+        public async Task<IActionResult> MijnMeldingen()
+        {
+            string userId = this.User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
 
+            ApplicationUser user = (from x in _context.Users
+                                    where x.Id == userId
+                                    select x).SingleOrDefault();
+
+            var meldingen = from a in _context.Melding
+                            where a.User_id == user.Id
+                            select a;
+
+            return View(await meldingen.ToListAsync());
+
+        }
+        
+        
         #region Helpers
 
         private void AddErrors(IdentityResult result)

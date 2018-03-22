@@ -1,47 +1,9 @@
-﻿@model MorFriesland.Models.Melding
+﻿@model MorFriesland.Models.ViewModels.MeldingVM
 
 @{
     ViewData["Title"] = "Nieuw";
 }
 
-<style>
-    /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-
-    .controls {
-        background-color: #fff;
-        border-radius: 2px;
-        border: 1px solid transparent;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-        box-sizing: border-box;
-        font-family: Roboto;
-        font-size: 15px;
-        font-weight: 300;
-        height: 29px;
-        margin-left: 17px;
-        margin-top: 10px;
-        outline: none;
-        padding: 0 11px 0 13px;
-        text-overflow: ellipsis;
-        width: 400px;
-    }
-
-        .controls:focus {
-            border-color: #4d90fe;
-        }
-
-    .title {
-        font-weight: bold;
-    }
-
-    #infowindow-content {
-        display: none;
-    }
-
-    #map #infowindow-content {
-        display: inline;
-    }
-</style>
 <h2>Nieuwe</h2>
 
 <h4>Melding</h4>
@@ -51,32 +13,32 @@
         <form asp-action="Nieuw" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Categorie_Id" class="control-label"></label>
-                <select asp-for="Categorie_Id" class="form-control" asp-items="ViewBag.Categorie_Id"></select>
+                <label asp-for="Melding.Categorie_Id" class="control-label"></label>
+                <select asp-for="Melding.Categorie_Id" class="form-control" asp-items="ViewBag.Categorie_Id"></select>
             </div>
             <div class="form-group">
-                <label asp-for="Beschrijving" class="control-label"></label>
-                <input asp-for="Beschrijving" class="form-control" />
-                <span asp-validation-for="Beschrijving" class="text-danger"></span>
+                <label asp-for="Melding.Beschrijving" class="control-label"></label>
+                <input asp-for="Melding.Beschrijving" class="form-control" />
+                <span asp-validation-for="Melding.Beschrijving" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Foto" class="control-label"></label>
+                <label asp-for="Melding.Foto" class="control-label"></label>
 
-                @*<img src="~/Uploads/@Model.Naam/@Model.Profiel_foto" class="profilePicture" />*@
-                <input type="hidden" asp-for="Foto" />
+                <input type="hidden" asp-for="Melding.Foto" />
 
                 <input type="file" name="Image" />
-                <span asp-validation-for="Foto" class="text-danger"></span>
+                <span asp-validation-for="Melding.Foto" class="text-danger"></span>
 
             </div>
             <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <label><input asp-for="Melding.Email" type="checkbox" id="EmailCheckbox" /> Wilt u op de hoogte gehouden worden van uw melding?</label>
+                
+                <input id="email" asp-for="Melding.Email" placeholder="Email" class="form-control"/>
+                <span asp-validation-for="Melding.Email" class="text-danger"></span>
             </div>
 
-            <input type="hidden" id="nieuwlong" asp-for="Long" class="form-control" />
-            <input type="hidden" id="nieuwlat" asp-for="Lat" class="form-control" />
+            <input type="hidden" id="nieuwlong" asp-for="Melding.Long" class="form-control" />
+            <input type="hidden" id="nieuwlat" asp-for="Melding.Lat" class="form-control" />
 
 
 
@@ -102,12 +64,16 @@
     </div>
 </div>
 
-
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+@foreach (Melding melding in Model.Meldingen)
+{
+    <div id="meldingen" data-lat="@melding.Lat" data-lng="@melding.Long"></div>
 }
+
+
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }

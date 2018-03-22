@@ -11,9 +11,10 @@ using System;
 namespace MorFriesland.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180320110848_melding")]
+    partial class melding
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -128,20 +129,6 @@ namespace MorFriesland.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("MorFriesland.Models.AccountViewModels.AddRoleUserViewModel", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Name");
-
-                    b.Property<string>("UserName");
-
-                    b.HasKey("id");
-
-                    b.ToTable("AddRoleUserViewModel");
-                });
-
             modelBuilder.Entity("MorFriesland.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -220,11 +207,9 @@ namespace MorFriesland.Data.Migrations
 
                     b.Property<bool>("Gearchiveerd");
 
-                    b.Property<string>("Lat");
+                    b.Property<decimal>("Lat");
 
-                    b.Property<string>("Long");
-
-                    b.Property<string>("Naam");
+                    b.Property<decimal>("Long");
 
                     b.Property<DateTime>("Opgelosttijd");
 
