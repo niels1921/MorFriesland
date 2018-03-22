@@ -1,6 +1,6 @@
 ﻿//Variabelen die later in de code gevuld worden;
 
-
+var locationstring = "";
 
 getLocation();
 
@@ -50,6 +50,9 @@ function toggleBounce() {
 
 
 function Ondrag(event) {
+
+    locationstring.close();
+
     lat = event.latLng.lat();
     lng = event.latLng.lng();
 
@@ -79,7 +82,7 @@ function SetPosistion(position) {
     };
     var icon2 = {
         url: "/images/Pompebled.png",
-        scaledSize: new google.maps.Size(35, 35), // scaled size
+        scaledSize: new google.maps.Size(30, 30), // scaled size
         origin: new google.maps.Point(0, 0), // origin
         anchor: new google.maps.Point(0, 0) // anchor
     };
@@ -94,6 +97,13 @@ function SetPosistion(position) {
     Locationmarker.addListener('click', toggleBounce);
     Locationmarker.addListener('drag', Ondrag);
     Locationmarker.addListener('dragend', Ondrag);
+
+    locationstring = new google.maps.InfoWindow({
+        content: "Uw locatie"
+    });
+
+    locationstring.open(map, Locationmarker);
+
 
     $('#meldingen[data-lat]').each(function () {
 

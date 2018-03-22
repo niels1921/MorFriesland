@@ -116,7 +116,7 @@ namespace MorFriesland.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Nieuw([Bind("Id,Categorie_Id,Beschrijving,Foto,Email,Long,Lat,Opgelosttijd,Gearchiveerd,User_id")] Melding melding, IFormFile Image)
+        public async Task<IActionResult> Nieuw([Bind("Id,Categorie_Id,Beschrijving,Foto,Email,Long,Lat,Gearchiveerd,User_id")] Melding melding, IFormFile Image)
         {
             string userId = this.User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
 
@@ -165,6 +165,7 @@ namespace MorFriesland.Controllers
                 {
                     melding.User_id = null;
                 }
+                melding.Opgelosttijd = null;
 
                 _context.Add(melding);
                 await _context.SaveChangesAsync();

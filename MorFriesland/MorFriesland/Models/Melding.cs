@@ -19,7 +19,7 @@ namespace MorFriesland.Models
         public string Email { get; set; }
         public string Long { get; set; }
         public string Lat { get; set; }
-        public DateTime Opgelosttijd { get; set; }
+        public DateTime? Opgelosttijd { get; set; }
         public bool Gearchiveerd { get; set; }
 
         public string User_id { get; set; }
