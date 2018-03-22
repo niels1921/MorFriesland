@@ -31,8 +31,10 @@
 
             </div>
             <div class="form-group">
+                <label>Wilt u op de hoogte gehouden worden van u melding? Vul dan uw emailadres in.</label>
+                <input asp-for="Melding.Email" type="checkbox" id="EmailCheckbox"/>
                 <label asp-for="Melding.Email" class="control-label"></label>
-                <input asp-for="Melding.Email" class="form-control" />
+                <input id="email" asp-for="Melding.Email" class="form-control"/>
                 <span asp-validation-for="Melding.Email" class="text-danger"></span>
             </div>
 
