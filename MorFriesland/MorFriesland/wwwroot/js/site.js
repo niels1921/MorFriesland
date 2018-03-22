@@ -4,5 +4,6 @@ $(document).ready(function () {
     $("#email").hide();
     $("#EmailCheckbox").click(function () {
         $("#email").toggle();
+
     }); 
 });
