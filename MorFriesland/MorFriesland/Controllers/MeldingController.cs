@@ -165,7 +165,6 @@ namespace MorFriesland.Controllers
                 {
                     melding.User_id = null;
                 }
-                melding.Opgelosttijd = null;
 
                 _context.Add(melding);
                 await _context.SaveChangesAsync();
