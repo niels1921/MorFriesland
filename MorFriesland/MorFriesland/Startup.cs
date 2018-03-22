@@ -16,8 +16,11 @@ namespace MorFriesland
 {
     public class Startup
     {
+        string _testSecret = null;
         public Startup(IConfiguration configuration)
         {
+            var builder = new ConfigurationBuilder();
+            builder.AddUserSecrets<Startup>();
             Configuration = configuration;
         }
 
@@ -26,6 +29,7 @@ namespace MorFriesland
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            _testSecret = Configuration["MySecret"];
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
