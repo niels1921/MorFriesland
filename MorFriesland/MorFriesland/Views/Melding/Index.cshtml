@@ -25,8 +25,7 @@
 
 @foreach (var item in Model)
 {
-
-    <div id="meldingen" data-lat="@item.Lat" data-lng="@item.Long" data-name="@item.Naam"></div>
+    <div id="meldingen" data-lat="@item.Lat" data-lng="@item.Long" data-name="@item.Naam" data-img="/uploads/@item.Naam/@item.Foto" data-beschrijving="@item.Beschrijving"></div>
 
 
 }

@@ -52,9 +52,25 @@ namespace MorFriesland.Controllers
         //}
 
         // GET: Melding
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder)
         {
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
             var applicationDbContext = _context.Melding.Include(m => m.Categorie).Include(m => m.Melder);
+            var datums = from s in _context.Melding
+                           select s;
+            switch (sortOrder)
+            {
+                case "Date":
+                    datums = datums.OrderBy(s => s.Opgelosttijd);
+                    break;
+                case "date_desc":
+                    datums = datums.OrderByDescending(s => s.Opgelosttijd);
+                    break;
+                default:
+                    datums = datums.OrderBy(s => s.Opgelosttijd);
+                    break;
+            }
+
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -122,7 +138,7 @@ namespace MorFriesland.Controllers
                 {
 
                     string uploadPatch = Path.Combine(_Environment.WebRootPath, "uploads");
-                    Directory.CreateDirectory(Path.Combine(uploadPatch, melding.Id.ToString()));
+                    Directory.CreateDirectory(Path.Combine(uploadPatch, melding.Naam));
 
                     string FileName = Image.FileName;
                     if (FileName.Contains('\\'))
@@ -130,7 +146,7 @@ namespace MorFriesland.Controllers
                         FileName = FileName.Split('\\').Last();
                     }
 
-                    using (var stream = new FileStream(Path.Combine(uploadPatch, melding.Id.ToString(), FileName), FileMode.Create))
+                    using (var stream = new FileStream(Path.Combine(uploadPatch, melding.Naam, FileName), FileMode.Create))
                     {
                         await Image.CopyToAsync(stream);
                     }
@@ -149,6 +165,7 @@ namespace MorFriesland.Controllers
                 {
                     melding.User_id = null;
                 }
+                melding.Opgelosttijd = null;
 
                 _context.Add(melding);
                 await _context.SaveChangesAsync();
