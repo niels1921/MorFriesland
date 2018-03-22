@@ -3,6 +3,7 @@
 var Locationmarker;
 var lat = "";
 var lng = "";
+//var icon = "";
 
 //Laad de map in
 function initMap() {
@@ -29,11 +30,21 @@ function initMap() {
             center: { lat: lat, lng: lng }
         });
 
+        var icon = {
+            url: "/images/Pompebled.svg.png",
+            scaledSize: new google.maps.Size(35, 35), // scaled size
+            origin: new google.maps.Point(0, 0), // origin
+            anchor: new google.maps.Point(0, 0) // anchor
+        };
+
+
         Locationmarker = new google.maps.Marker({
             map: map,
             draggable: true,
             animation: google.maps.Animation.DROP,
-            position: { lat: position.coords.latitude, lng: position.coords.longitude}
+            position: { lat: position.coords.latitude, lng: position.coords.longitude },
+            icon: icon
+       
         });
         Locationmarker.addListener('click', toggleBounce);
         Locationmarker.addListener('drag', Ondrag);
