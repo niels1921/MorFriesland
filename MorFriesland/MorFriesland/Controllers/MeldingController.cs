@@ -36,10 +36,19 @@ namespace MorFriesland.Controllers
         }
 
         // GET: Melding
-        public async Task<IActionResult> MijnMeldingen()
+        public async Task<IActionResult> MijnMeldingen(Melding melding)
         {
-            var applicationDbContext = _context.Melding.Include(m => m.Categorie).Include(m => m.Melder);
-            return View(await applicationDbContext.ToListAsync());
+            string userId = this.User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
+
+            ApplicationUser user = (from x in _context.Users
+                                    where x.Id == userId
+                                    select x).SingleOrDefault();
+
+            var meldingen = from a in _context.Melding
+                            where a.User_id == user.Id
+                            select a;
+
+            return View(await meldingen.ToListAsync());
         }
 
         // GET: Melding
