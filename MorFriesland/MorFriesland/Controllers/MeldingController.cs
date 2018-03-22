@@ -36,7 +36,7 @@ namespace MorFriesland.Controllers
         }
 
         // GET: Melding
-        public async Task<IActionResult> Beheer()
+        public async Task<IActionResult> MijnMeldingen()
         {
             var applicationDbContext = _context.Melding.Include(m => m.Categorie).Include(m => m.Melder);
             return View(await applicationDbContext.ToListAsync());
@@ -233,11 +233,11 @@ namespace MorFriesland.Controllers
             var melding = await _context.Melding.SingleOrDefaultAsync(m => m.Id == id);
             _context.Melding.Remove(melding);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Beheer));
+            return RedirectToAction(nameof(MijnMeldingen));
         }
 
         private bool MeldingExists(int id)
-        {
+        {   
             return _context.Melding.Any(e => e.Id == id);
         }
     }
