@@ -1,0 +1,88 @@
+﻿@model IEnumerable<MorFriesland.Models.Melding>
+
+@{
+    ViewData["Title"] = "IndexBeheer";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <div class="row search">
+
+        <div class="col-lg-6">
+            <form asp-controller="Beheer" asp-action="Index" method="get" id="searchString">
+                <div class="input-group">
+                    <select id="searchString">
+                     @foreach (var item in Model)
+                     {
+                         <option value="@item.Categorie_Id">@item.Categorie.Naam</option>
+                     }
+                    </select>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit">Zoek!</button>
+                    </span>
+                </div><!-- /input-group -->
+            </form>
+
+        </div><!-- /.col-lg-6 -->
+    </div>
+<div class="row">
+    <div class="col-md-4">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Beschrijving)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Opgelosttijd)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Categorie)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Beschrijving)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Opgelosttijd)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Categorie.Naam)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-8">
+        <input id="pac-input" class="controls" type="text"
+               placeholder="Zoek een locatie">
+        <div class="nieuwemap" id="map"></div>
+        <div id="infowindow-content">
+            <span id="place-name" class="title"></span><br>
+
+            <span id="place-address"></span>
+        </div>
+        <script src="~/js/nieuwemelding.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCK3VEpVPHSGvBnYuGfLUYYtj1MnJ4rPWg&libraries=places&callback=initMap" async defer></script>
+    </div>
+</div>
+</body>
+</html>
