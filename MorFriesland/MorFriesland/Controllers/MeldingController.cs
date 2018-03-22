@@ -52,9 +52,25 @@ namespace MorFriesland.Controllers
         }
 
         // GET: Melding
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder)
         {
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
             var applicationDbContext = _context.Melding.Include(m => m.Categorie).Include(m => m.Melder);
+            var datums = from s in _context.Melding
+                           select s;
+            switch (sortOrder)
+            {
+                case "Date":
+                    datums = datums.OrderBy(s => s.Opgelosttijd);
+                    break;
+                case "date_desc":
+                    datums = datums.OrderByDescending(s => s.Opgelosttijd);
+                    break;
+                default:
+                    datums = datums.OrderBy(s => s.Opgelosttijd);
+                    break;
+            }
+
             return View(await applicationDbContext.ToListAsync());
         }
 

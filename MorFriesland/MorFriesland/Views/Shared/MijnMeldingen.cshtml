@@ -16,7 +16,7 @@
                 @Html.DisplayNameFor(model => model.Foto)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Opgelosttijd)
+                <a asp-action="Mijnmeldingen" asp-route-sortOrder="@ViewData["DateSortParm"]">@Html.DisplayNameFor(model => model.Opgelosttijd)</a>
             </th>
         </tr>
     </thead>
