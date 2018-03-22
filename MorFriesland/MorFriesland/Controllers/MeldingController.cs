@@ -113,7 +113,7 @@ namespace MorFriesland.Controllers
                 {
 
                     string uploadPatch = Path.Combine(_Environment.WebRootPath, "uploads");
-                    Directory.CreateDirectory(Path.Combine(uploadPatch, melding.Id.ToString()));
+                    Directory.CreateDirectory(Path.Combine(uploadPatch, melding.Naam));
 
                     string FileName = Image.FileName;
                     if (FileName.Contains('\\'))
@@ -121,7 +121,7 @@ namespace MorFriesland.Controllers
                         FileName = FileName.Split('\\').Last();
                     }
 
-                    using (var stream = new FileStream(Path.Combine(uploadPatch, melding.Id.ToString(), FileName), FileMode.Create))
+                    using (var stream = new FileStream(Path.Combine(uploadPatch, melding.Naam, FileName), FileMode.Create))
                     {
                         await Image.CopyToAsync(stream);
                     }
