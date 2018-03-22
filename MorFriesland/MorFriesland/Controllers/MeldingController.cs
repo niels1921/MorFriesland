@@ -36,20 +36,20 @@ namespace MorFriesland.Controllers
         }
 
         // GET: Melding
-        public async Task<IActionResult> MijnMeldingen(Melding melding)
-        {
-            string userId = this.User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
+        //public async Task<IActionResult> MijnMeldingen(Melding melding)
+        //{
+        //    string userId = this.User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
 
-            ApplicationUser user = (from x in _context.Users
-                                    where x.Id == userId
-                                    select x).SingleOrDefault();
+        //    ApplicationUser user = (from x in _context.Users
+        //                            where x.Id == userId
+        //                            select x).SingleOrDefault();
 
-            var meldingen = from a in _context.Melding
-                            where a.User_id == user.Id
-                            select a;
+        //    var meldingen = from a in _context.Melding
+        //                    where a.User_id == user.Id
+        //                    select a;
 
-            return View(await meldingen.ToListAsync());
-        }
+        //    return View(await meldingen.ToListAsync());
+        //}
 
         // GET: Melding
         public async Task<IActionResult> Index()
@@ -100,7 +100,7 @@ namespace MorFriesland.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Nieuw([Bind("Id,Categorie_Id,Beschrijving,Foto,Email,Long,Lat,Opgelosttijd,Gearchiveerd,User_id")] Melding melding, IFormFile Image)
+        public async Task<IActionResult> Nieuw([Bind("Id,Categorie_Id,Beschrijving,Foto,Email,Long,Lat,Gearchiveerd,User_id")] Melding melding, IFormFile Image)
         {
             string userId = this.User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
 
@@ -242,7 +242,7 @@ namespace MorFriesland.Controllers
             var melding = await _context.Melding.SingleOrDefaultAsync(m => m.Id == id);
             _context.Melding.Remove(melding);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(MijnMeldingen));
+            return RedirectToAction(nameof(Index));
         }
 
         private bool MeldingExists(int id)
