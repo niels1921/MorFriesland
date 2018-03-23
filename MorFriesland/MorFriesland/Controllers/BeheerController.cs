@@ -25,20 +25,22 @@ namespace MorFriesland.Controllers
         }
 
         // GET: Beheer
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string SearchString)
         {
 
-            ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Id", "Naam");
-            var applicationDbContext = _context.Melding.Include(m => m.Categorie).Include(m => m.Melder);
-            var meldingen = from k in applicationDbContext
+            ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Naam", "Naam");
+            //var applicationDbContext = _context.Melding.Include(m => m.Categorie).Include(m => m.Melder);
+            var meldingen = from k in _context.Melding
                             select k;
 
-            if (!String.IsNullOrEmpty(searchString))
+            if (!String.IsNullOrEmpty(SearchString))
             {
-               // meldingen = meldingen.Where(s => s.Categorie.Contains(searchString));
+                meldingen = meldingen.Where(s => s.Naam.Contains(SearchString));
             }
+
+
             
-            return View(await applicationDbContext.ToListAsync());
+            return View(await meldingen.ToListAsync());
         }
 
         // GET: Beheer/Details/5
