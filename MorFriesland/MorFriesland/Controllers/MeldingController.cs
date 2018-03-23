@@ -55,11 +55,14 @@ namespace MorFriesland.Controllers
 
             switch (sortOrder)
             {
+                case "Date":
+                    datums = datums.OrderBy(s => s.Opgelosttijd);
+                    break;
                 case "date_desc":
                     datums = datums.OrderByDescending(s => s.Opgelosttijd);
                     break;
                 default:
-                    datums = datums.OrderBy(s => s.Opgelosttijd);
+                    datums = datums.OrderByDescending(s => s.Opgelosttijd);
                     break;
             }
 
