@@ -37,39 +37,44 @@
     </environment>
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div id="wrapper">
 
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
+        <nav class="navbar navbar-inverse navbar">
 
-                </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand"><img class="logo" src="~/images/logo provincie fryslan.png"></a>
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+
+                    </button>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand"><img class="logo" src="~/images/logo provincie fryslan.png"></a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a class="menubutton" asp-area="" asp-controller="Melding" asp-action="Nieuw">Nieuwe melding</a></li>
+                        <li><a class="menubutton" asp-area="" asp-controller="Melding" asp-action="index">Meldingen</a></li>
+                        <li><a class="menubutton" asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    </ul>
+                    @await Html.PartialAsync("_LoginPartial")
+                </div>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a class="menubutton" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a class="menubutton" asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a class="menubutton" asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                </ul>
-                @await Html.PartialAsync("_LoginPartial")
-            </div>
+        </nav>
+        <div class="container body-content">
+            <div class="content">
+            @RenderBody()
+            <hr />
+                </div>
+
         </div>
-    </nav>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-
-    </div>
-    <footer>
-        <p>&copy; 2018 - MorFriesland</p>
-    </footer>
+        <footer>
+            <p>&copy; 2018 - MorFriesland</p>
+        </footer>
 
 
-    @RenderSection("Scripts", required: false)
+        @RenderSection("Scripts", required: false)
+        </div>
 </body>
 </html>
