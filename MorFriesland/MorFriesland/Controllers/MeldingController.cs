@@ -36,8 +36,9 @@ namespace MorFriesland.Controllers
         }
 
         // GET: Melding
-        public async Task<IActionResult> MijnMeldingen(Melding melding)
+        public async Task<IActionResult> MijnMeldingen(Melding melding, string sortOrder)
         {
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
             string userId = this.User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
 
             ApplicationUser user = (from x in _context.Users
@@ -48,21 +49,12 @@ namespace MorFriesland.Controllers
                             where a.User_id == user.Id
                             select a;
 
-            return View(await meldingen.ToListAsync());
-        }
+            var datums = from s in _context.Melding.Include(s => s.Categorie).Include(s => s.Melder)
+                         where s.User_id == user.Id
+                         select s;
 
-        // GET: Melding
-        public async Task<IActionResult> Index(string sortOrder)
-        {
-            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
-            var applicationDbContext = _context.Melding.Include(m => m.Categorie).Include(m => m.Melder);
-            var datums = from s in _context.Melding
-                           select s;
             switch (sortOrder)
             {
-                case "Date":
-                    datums = datums.OrderBy(s => s.Opgelosttijd);
-                    break;
                 case "date_desc":
                     datums = datums.OrderByDescending(s => s.Opgelosttijd);
                     break;
@@ -71,6 +63,14 @@ namespace MorFriesland.Controllers
                     break;
             }
 
+            return View(await datums.AsNoTracking().ToListAsync());
+        }
+
+        // GET: Melding
+        public async Task<IActionResult> Index()
+        {          
+            var applicationDbContext = _context.Melding.Include(m => m.Categorie).Include(m => m.Melder);
+           
             return View(await applicationDbContext.ToListAsync());
         }
 
