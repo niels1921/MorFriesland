@@ -496,6 +496,8 @@ namespace MorFriesland.Controllers
 
             return View(nameof(ShowRecoveryCodes), model);
         }
+        [HttpGet]
+        [Authorize]
         public async Task<IActionResult> MijnMeldingen()
         {
             string userId = this.User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);

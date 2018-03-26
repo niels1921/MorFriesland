@@ -36,8 +36,9 @@ namespace MorFriesland.Controllers
         }
 
         // GET: Melding
-        public async Task<IActionResult> MijnMeldingen(Melding melding)
+        public async Task<IActionResult> MijnMeldingen(Melding melding, string sortOrder)
         {
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
             string userId = this.User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
 
             ApplicationUser user = (from x in _context.Users
@@ -48,13 +49,31 @@ namespace MorFriesland.Controllers
                             where a.User_id == user.Id
                             select a;
 
-            return View(await meldingen.ToListAsync());
+            var datums = from s in _context.Melding.Include(s => s.Categorie).Include(s => s.Melder)
+                         where s.User_id == user.Id
+                         select s;
+
+            switch (sortOrder)
+            {
+                case "Date":
+                    datums = datums.OrderBy(s => s.Opgelosttijd);
+                    break;
+                case "date_desc":
+                    datums = datums.OrderByDescending(s => s.Opgelosttijd);
+                    break;
+                default:
+                    datums = datums.OrderByDescending(s => s.Opgelosttijd);
+                    break;
+            }
+
+            return View(await datums.AsNoTracking().ToListAsync());
         }
 
         // GET: Melding
         public async Task<IActionResult> Index()
-        {
+        {          
             var applicationDbContext = _context.Melding.Include(m => m.Categorie).Include(m => m.Melder);
+           
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -100,7 +119,7 @@ namespace MorFriesland.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Nieuw([Bind("Id,Categorie_Id,Beschrijving,Foto,Email,Long,Lat,Opgelosttijd,Gearchiveerd,User_id")] Melding melding, IFormFile Image)
+        public async Task<IActionResult> Nieuw([Bind("Id,Categorie_Id,Beschrijving,Foto,Email,Long,Lat,Gearchiveerd,User_id")] Melding melding, IFormFile Image)
         {
             string userId = this.User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
 
@@ -149,6 +168,7 @@ namespace MorFriesland.Controllers
                 {
                     melding.User_id = null;
                 }
+                melding.Opgelosttijd = null;
 
                 _context.Add(melding);
                 await _context.SaveChangesAsync();
