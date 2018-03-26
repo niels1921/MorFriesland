@@ -15,16 +15,14 @@
     <div class="row search">
 
         <div class="col-lg-6">
-            <form asp-controller="Beheer" asp-action="Index" method="get" id="searchString">
+            <form asp-controller="Beheer" asp-action="Index" method="get" id="SearchString">
                 <div class="input-group">
-                    <select id="searchString">
-                     @foreach (var item in Model)
-                     {
-                         <option value="@item.Categorie_Id">@item.Categorie.Naam</option>
-                     }
-                    </select>
+          
+                    <select name="SearchString" class="form-control" asp-items="ViewBag.Categorie_Id"></select>
+
+
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="submit">Zoek!</button>
+                        <button class="btn btn-default" type="submit">Filter</button>
                     </span>
                 </div><!-- /input-group -->
             </form>
@@ -50,24 +48,27 @@
             </thead>
             <tbody>
                 @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Beschrijving)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Opgelosttijd)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Categorie.Naam)
-                        </td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                        </td>
-                    </tr>
-                }
+    {
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Beschrijving)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Opgelosttijd)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Categorie.Naam)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+            <div id="meldingen" style="display: none;" data-lat="@item.Lat" data-lng="@item.Long" data-name="@item.Naam" data-img="/uploads/@item.Naam/@item.Foto" data-beschrijving="@item.Beschrijving"></div>
+
+}
             </tbody>
         </table>
     </div>
@@ -80,7 +81,7 @@
 
             <span id="place-address"></span>
         </div>
-        <script src="~/js/nieuwemelding.js"></script>
+        <script src="~/js/allemeldingen.js"></script>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCK3VEpVPHSGvBnYuGfLUYYtj1MnJ4rPWg&libraries=places&callback=initMap" async defer></script>
     </div>
 </div>
