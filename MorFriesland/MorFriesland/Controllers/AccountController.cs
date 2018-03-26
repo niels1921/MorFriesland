@@ -234,6 +234,11 @@ namespace MorFriesland.Controllers
                     var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
                     await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
 
+                    if (!User.IsInRole("test"))
+                    {
+                        await _userManager.AddToRoleAsync(user, "test");
+                    }
+
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation("User created a new account with password.");
                     return RedirectToLocal(returnUrl);
@@ -446,8 +451,9 @@ namespace MorFriesland.Controllers
             if (!await _roleManager.RoleExistsAsync(role))
             {
                 await _roleManager.CreateAsync(new IdentityRole(role));
+                
             }
-             return Json(_roleManager.Roles);
+            return Json(_roleManager.Roles);
         }
 
         [HttpGet]
@@ -459,17 +465,18 @@ namespace MorFriesland.Controllers
             return View();
 
         }
+
         [HttpPost]
         public async Task<IActionResult> AddUserRole(string username, string name)
         { 
             ApplicationUser user = await _userManager.FindByEmailAsync(username);
 
-            if (!User.IsInRole(name))
+            if (!await _userManager.IsInRoleAsync(user, name))
             { 
-                await _userManager.AddToRoleAsync(user, name);
+                 IdentityResult result = await _userManager.AddToRoleAsync(user, name);
             }
-            
 
+            
             return Json(await _userManager.GetRolesAsync(user));
         }
 

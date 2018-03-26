@@ -19,6 +19,7 @@ namespace MorFriesland
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            
         }
 
         public IConfiguration Configuration { get; }
@@ -38,7 +39,19 @@ namespace MorFriesland
                 options.Password.RequireLowercase = true;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
+
+                //Email Confirmation settings
+                options.SignIn.RequireConfirmedEmail = false;
+
+
+
+
             })
+            
+                
+            
+            
+
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
