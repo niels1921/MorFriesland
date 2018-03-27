@@ -11,22 +11,34 @@ using Microsoft.Extensions.DependencyInjection;
 using MorFriesland.Data;
 using MorFriesland.Models;
 using MorFriesland.Services;
+using System.Net.Mail;
 
 namespace MorFriesland
 {
     public class Startup
     {
+        string _testSecret = null;
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
-            
+            var builder = new ConfigurationBuilder();
+
+            builder.AddUserSecrets<Startup>();
+
+            Configuration = builder.Build();
+
+            foreach (var item in configuration.AsEnumerable())
+            {
+                Configuration[item.Key] = item.Value;
+            }
         }
+
 
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            _testSecret = Configuration["MySecret"];
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -36,22 +48,12 @@ namespace MorFriesland
                 options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 1;
                 options.Password.RequiredUniqueChars = 1;
-                options.Password.RequireLowercase = true;
+                options.Password.RequireLowercase = true;   
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
-
-                //Email Confirmation settings
-                options.SignIn.RequireConfirmedEmail = false;
-
-
-
-
+                options.SignIn.RequireConfirmedEmail = true;
             })
             
-                
-            
-            
-
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -59,6 +61,7 @@ namespace MorFriesland
             services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddMvc();
+            services.Configure<AuthMessageSenderOptions>(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
