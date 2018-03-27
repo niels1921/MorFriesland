@@ -16,16 +16,28 @@ namespace MorFriesland
 {
     public class Startup
     {
+        string _testSecret = null;
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder();
+
+            builder.AddUserSecrets<Startup>();
+
+            Configuration = builder.Build();
+
+            foreach (var item in configuration.AsEnumerable())
+            {
+                Configuration[item.Key] = item.Value;
+            }
         }
+
 
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            _testSecret = Configuration["MySecret"];
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -38,14 +50,24 @@ namespace MorFriesland
                 options.Password.RequireLowercase = true;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
+                options.SignIn.RequireConfirmedEmail = false;
             })
+            
+                
+            
+            
+
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+           
+        
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddMvc();
+            services.Configure<AuthMessageSenderOptions>(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
