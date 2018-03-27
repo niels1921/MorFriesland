@@ -13,6 +13,10 @@ using Microsoft.EntityFrameworkCore;
 using MorFriesland.Data;
 using MorFriesland.Models;
 using MorFriesland.Models.ViewModels;
+using System.Net.Mail;
+using SendGrid.Helpers.Mail;
+using SendGrid;
+using System.Globalization;
 
 namespace MorFriesland.Controllers
 {
@@ -25,14 +29,11 @@ namespace MorFriesland.Controllers
 
         private IHostingEnvironment _Environment;
 
-
         public MeldingController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment environment)
         {
             _context = context;
             _userManager = userManager;
             _Environment = environment;
-
-
         }
 
         // GET: Melding
@@ -70,7 +71,7 @@ namespace MorFriesland.Controllers
         }
 
         // GET: Melding
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Alle()
         {          
             var applicationDbContext = _context.Melding.Include(m => m.Categorie).Include(m => m.Melder);
            
@@ -98,7 +99,7 @@ namespace MorFriesland.Controllers
         }
 
         // GET: Melding/Create
-        public IActionResult Nieuw()
+        public IActionResult Index()
         {
             ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Id", "Naam");
             ViewData["User_id"] = new SelectList(_context.Users, "Id", "Id");
@@ -119,7 +120,7 @@ namespace MorFriesland.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Nieuw([Bind("Id,Categorie_Id,Beschrijving,Foto,Email,Long,Lat,Gearchiveerd,User_id")] Melding melding, IFormFile Image)
+        public async Task<IActionResult> Index([Bind("Id,Categorie_Id,Beschrijving,Foto,Email,Long,Lat,Gearchiveerd,User_id")] Melding melding, IFormFile Image)
         {
             string userId = this.User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
 
@@ -131,8 +132,12 @@ namespace MorFriesland.Controllers
                            where cat.Id == melding.Categorie_Id
                            select cat).SingleOrDefault();
 
+            string naam = melding.Naam;
 
             melding.Naam = categorienaam.Naam;
+            string beheerdermail = "";
+
+            string email = melding.Email;
 
             if (ModelState.IsValid)
             {
@@ -177,11 +182,59 @@ namespace MorFriesland.Controllers
                     melding.User_id = null;
                 }
                 melding.Opgelosttijd = null;
+                //Convert.ToDouble(3.2, CultureInfo.InvariantCulture);
+                double lat = Convert.ToDouble(melding.Lat, CultureInfo.InvariantCulture);
 
+                if(lat > 53.2012379)
+                {
+                    beheerdermail = "harm.vandenbogert@outlook.com";
+                }
+                else
+                {
+                    beheerdermail = " nieu1702@student.nhl.nl";
+                }
+
+                if (melding.Email != null)
+                {
+                    string mail = melding.Email;
+                    string beschrijving = melding.Beschrijving;
+
+                    var apiKey = Environment.GetEnvironmentVariable("SENDGRID_KEY", EnvironmentVariableTarget.User);
+                    var client = new SendGridClient(apiKey);
+                    var from = new EmailAddress("klaas.vanderwerk@gmail.com", "MOR Friesland");
+                    var subject = "Melding" + melding.Naam;
+                    var to = new EmailAddress(mail);
+                    var plainTextContent = "koptext?";
+                    var htmlContent = "Mail van de melding" + Environment.NewLine + "Beschrijving: " + beschrijving + Environment.NewLine;
+                    var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+                    var response = await client.SendEmailAsync(msg);
+                    var to2 = new EmailAddress(beheerdermail);
+                    var htmlContent2 = "Mail van de melding" + Environment.NewLine + "Beschrijving: " + beschrijving + Environment.NewLine;
+                    //beheerder linkje naar de melding detail pagina
+                    var msg2 = MailHelper.CreateSingleEmail(from, to2, subject, plainTextContent, htmlContent2);
+                    var response2 = await client.SendEmailAsync(msg2);
+                }
+                else
+                {
+                    string beschrijving = melding.Beschrijving;
+
+                    var apiKey = Environment.GetEnvironmentVariable("SENDGRID_KEY", EnvironmentVariableTarget.User);
+                    var client = new SendGridClient(apiKey);
+                    var from = new EmailAddress("klaas.vanderwerk@gmail.com", "MOR Friesland");
+                    var subject = "Melding" + melding.Naam;
+                    var to = new EmailAddress(beheerdermail);
+                    var plainTextContent = "koptext?";
+                    var htmlContent = "Mail van de melding" + Environment.NewLine + "Beschrijving: " + beschrijving + Environment.NewLine;
+                    //beheerder linkje naar de melding detail pagina
+                    var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+                    var response = await client.SendEmailAsync(msg);
+                }
                 _context.Add(melding);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Alle));
             }
+
+            
             ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Id", "Naam", melding.Categorie_Id);
             ViewData["User_id"] = new SelectList(_context.Users, "Id", "Id", melding.User_id);
             return View(melding);
@@ -235,7 +288,7 @@ namespace MorFriesland.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Alle));
             }
             ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Id", "Id", melding.Categorie_Id);
             ViewData["User_id"] = new SelectList(_context.Users, "Id", "Id", melding.User_id);

@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MorFriesland.Data;
 using MorFriesland.Models;
 using MorFriesland.Services;
+using System.Net.Mail;
 
 namespace MorFriesland
 {
@@ -31,7 +32,6 @@ namespace MorFriesland
             }
         }
 
-
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -47,21 +47,14 @@ namespace MorFriesland
                 options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 1;
                 options.Password.RequiredUniqueChars = 1;
-                options.Password.RequireLowercase = true;
+                options.Password.RequireLowercase = true;   
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
-                options.SignIn.RequireConfirmedEmail = false;
+                options.SignIn.RequireConfirmedEmail = true;
             })
             
-                
-            
-            
-
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-
-           
-        
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
@@ -92,7 +85,7 @@ namespace MorFriesland
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Melding}/{action=Index}/{id?}");
             });
         }
     }
