@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MorFriesland.Data;
 using MorFriesland.Models;
 using MorFriesland.Services;
+using System.Net.Mail;
 
 namespace MorFriesland
 {
@@ -47,21 +48,14 @@ namespace MorFriesland
                 options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 1;
                 options.Password.RequiredUniqueChars = 1;
-                options.Password.RequireLowercase = true;
+                options.Password.RequireLowercase = true;   
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
-                options.SignIn.RequireConfirmedEmail = false;
+                options.SignIn.RequireConfirmedEmail = true;
             })
             
-                
-            
-            
-
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-
-           
-        
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
