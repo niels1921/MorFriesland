@@ -16,6 +16,7 @@ using MorFriesland.Models.ViewModels;
 using System.Net.Mail;
 using SendGrid.Helpers.Mail;
 using SendGrid;
+using System.Globalization;
 
 namespace MorFriesland.Controllers
 {
@@ -134,6 +135,7 @@ namespace MorFriesland.Controllers
             string naam = melding.Naam;
 
             melding.Naam = categorienaam.Naam;
+            string beheerdermail = "";
 
             string email = melding.Email;
 
@@ -172,6 +174,17 @@ namespace MorFriesland.Controllers
                     melding.User_id = null;
                 }
                 melding.Opgelosttijd = null;
+                //Convert.ToDouble(3.2, CultureInfo.InvariantCulture);
+                double lat = Convert.ToDouble(melding.Lat, CultureInfo.InvariantCulture);
+
+                if(lat > 53.2012379)
+                {
+                    beheerdermail = "harm.vandenbogert@outlook.com";
+                }
+                else
+                {
+                    beheerdermail = " nieu1702@student.nhl.nl";
+                }
 
                 if (melding.Email != null)
                 {
@@ -185,6 +198,26 @@ namespace MorFriesland.Controllers
                     var to = new EmailAddress(mail);
                     var plainTextContent = "koptext?";
                     var htmlContent = "Mail van de melding" + Environment.NewLine + "Beschrijving: " + beschrijving + Environment.NewLine;
+                    var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+                    var response = await client.SendEmailAsync(msg);
+                    var to2 = new EmailAddress(beheerdermail);
+                    var htmlContent2 = "Mail van de melding" + Environment.NewLine + "Beschrijving: " + beschrijving + Environment.NewLine;
+                    //beheerder linkje naar de melding detail pagina
+                    var msg2 = MailHelper.CreateSingleEmail(from, to2, subject, plainTextContent, htmlContent2);
+                    var response2 = await client.SendEmailAsync(msg2);
+                }
+                else
+                {
+                    string beschrijving = melding.Beschrijving;
+
+                    var apiKey = Environment.GetEnvironmentVariable("SENDGRID_KEY", EnvironmentVariableTarget.User);
+                    var client = new SendGridClient(apiKey);
+                    var from = new EmailAddress("klaas.vanderwerk@gmail.com", "MOR Friesland");
+                    var subject = "Melding" + melding.Naam;
+                    var to = new EmailAddress(beheerdermail);
+                    var plainTextContent = "koptext?";
+                    var htmlContent = "Mail van de melding" + Environment.NewLine + "Beschrijving: " + beschrijving + Environment.NewLine;
+                    //beheerder linkje naar de melding detail pagina
                     var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
                     var response = await client.SendEmailAsync(msg);
                 }
