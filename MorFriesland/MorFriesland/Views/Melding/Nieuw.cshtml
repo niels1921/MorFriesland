@@ -25,7 +25,8 @@
 
                 <input type="hidden" asp-for="Melding.Foto" />
 
-                <input type="file" name="Image" />
+                <input type="file" name="Image" accept="image/jpeg,image/png" />
+                
                 <span asp-validation-for="Melding.Foto" class="text-danger"></span>
 
             </div>

@@ -148,12 +148,20 @@ namespace MorFriesland.Controllers
                     {
                         FileName = FileName.Split('\\').Last();
                     }
+                    
 
                     using (var stream = new FileStream(Path.Combine(uploadPatch, melding.Naam, FileName), FileMode.Create))
                     {
                         await Image.CopyToAsync(stream);
                     }
-                    melding.Foto = FileName;
+                    if (FileName.Contains("jpg") || FileName.Contains("png"))
+                    {
+                        melding.Foto = FileName;
+                    }
+                    else
+                    {
+                        melding.Foto = null;
+                    }
                 }
 
                 melding.Gearchiveerd = false;

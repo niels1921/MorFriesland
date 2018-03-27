@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,7 +16,10 @@ namespace MorFriesland.Models
         [ForeignKey("Categorie_Id")]
         public Categorie Categorie { get; set; }
         public string Beschrijving { get; set; }
+
+        [RegularExpression(@"^.*\.(png|PNG)$", ErrorMessage = "Je mag alleen .jpg en .png bestanden uploaden")]
         public string Foto { get; set; }
+
         public string Email { get; set; }
         public string Long { get; set; }
         public string Lat { get; set; }
