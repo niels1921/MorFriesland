@@ -57,13 +57,6 @@ namespace MorFriesland
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            //services.AddIdentity<ApplicationUser, IdentityRole>(config =>
-            //{
-            //    config.SignIn.RequireConfirmedEmail = true;
-            //})
-            //    .AddEntityFrameworkStores<ApplicationDbContext>()
-            //    .AddDefaultTokenProviders();
-
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 

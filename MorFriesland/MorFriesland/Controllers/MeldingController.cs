@@ -13,6 +13,9 @@ using Microsoft.EntityFrameworkCore;
 using MorFriesland.Data;
 using MorFriesland.Models;
 using MorFriesland.Models.ViewModels;
+using System.Net.Mail;
+using SendGrid.Helpers.Mail;
+using SendGrid;
 
 namespace MorFriesland.Controllers
 {
@@ -25,14 +28,11 @@ namespace MorFriesland.Controllers
 
         private IHostingEnvironment _Environment;
 
-
         public MeldingController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment environment)
         {
             _context = context;
             _userManager = userManager;
             _Environment = environment;
-
-
         }
 
         // GET: Melding
@@ -170,10 +170,27 @@ namespace MorFriesland.Controllers
                 }
                 melding.Opgelosttijd = null;
 
+                if (melding.Email != null)
+                {
+                    string mail = melding.Email;
+                    string beschrijving = melding.Beschrijving;
+
+                    var apiKey = Environment.GetEnvironmentVariable("SENDGRID_KEY", EnvironmentVariableTarget.User);
+                    var client = new SendGridClient(apiKey);
+                    var from = new EmailAddress("klaas.vanderwerk@gmail.com", "MOR Friesland");
+                    var subject = "Melding" + melding.Naam;
+                    var to = new EmailAddress(mail);
+                    var plainTextContent = "koptext?";
+                    var htmlContent = "Mail van de melding" + Environment.NewLine + "Beschrijving: " + beschrijving + Environment.NewLine;
+                    var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+                    var response = await client.SendEmailAsync(msg);
+                }
                 _context.Add(melding);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            
             ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Id", "Naam", melding.Categorie_Id);
             ViewData["User_id"] = new SelectList(_context.Users, "Id", "Id", melding.User_id);
             return View(melding);

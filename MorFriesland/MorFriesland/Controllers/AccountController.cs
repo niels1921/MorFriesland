@@ -234,9 +234,9 @@ namespace MorFriesland.Controllers
                     var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
                     await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
 
-                    if (!User.IsInRole("User"))
+                    if (!User.IsInRole("Gebruiker"))
                     {
-                        await _userManager.AddToRoleAsync(user, "User");
+                        await _userManager.AddToRoleAsync(user, "Gebruiker");
                     }
 
                     //await _signInManager.SignInAsync(user, isPersistent: false);
