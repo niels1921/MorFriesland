@@ -457,7 +457,7 @@ namespace MorFriesland.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult AddUserRole()
         {
             ViewData["UserName"] = new SelectList(_context.Users, "UserName", "UserName");

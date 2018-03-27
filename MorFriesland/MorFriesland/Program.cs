@@ -5,12 +5,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MorFriesland.Models;
 using SendGrid;
 using SendGrid.Helpers.Mail;
-using System;
-using System.Threading.Tasks;
+
 
 namespace MorFriesland
 {
@@ -18,8 +20,18 @@ namespace MorFriesland
     {
         public static void Main(string[] args)
         {
-            Execute().Wait();
-            BuildWebHost(args).Run();
+            var host = BuildWebHost(args);
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                SeedAdminAccount.Initialise(userManager, roleManager).Wait();
+            }
+            host.Run();
+            //Execute().Wait();
+
+            //BuildWebHost(args).Run();
         }
 
         static async Task Execute()
