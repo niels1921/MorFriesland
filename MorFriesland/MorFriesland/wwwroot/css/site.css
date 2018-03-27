@@ -54,12 +54,20 @@
     outline: none;
     padding: 0 11px 0 13px;
     text-overflow: ellipsis;
-    width: 400px;
+    max-width: 400px;
+    width: 100%;
 }
 
     .controls:focus {
         border-color: #4d90fe;
     }
+
+
+.btn.btn-default.meldingbutton {
+    background-color: #244994;
+    border-color: #244994;
+    color: white;
+}
 
 .infobeschrijving {
     word-wrap: break-word;

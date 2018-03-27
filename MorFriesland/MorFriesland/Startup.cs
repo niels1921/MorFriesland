@@ -83,7 +83,7 @@ namespace MorFriesland
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Melding}/{action=Index}/{id?}");
             });
         }
     }

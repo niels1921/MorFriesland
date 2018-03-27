@@ -70,7 +70,7 @@ namespace MorFriesland.Controllers
         }
 
         // GET: Melding
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Alle()
         {          
             var applicationDbContext = _context.Melding.Include(m => m.Categorie).Include(m => m.Melder);
            
@@ -98,7 +98,7 @@ namespace MorFriesland.Controllers
         }
 
         // GET: Melding/Create
-        public IActionResult Nieuw()
+        public IActionResult Index()
         {
             ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Id", "Naam");
             ViewData["User_id"] = new SelectList(_context.Users, "Id", "Id");
@@ -119,7 +119,7 @@ namespace MorFriesland.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Nieuw([Bind("Id,Categorie_Id,Beschrijving,Foto,Email,Long,Lat,Gearchiveerd,User_id")] Melding melding, IFormFile Image)
+        public async Task<IActionResult> Index([Bind("Id,Categorie_Id,Beschrijving,Foto,Email,Long,Lat,Gearchiveerd,User_id")] Melding melding, IFormFile Image)
         {
             string userId = this.User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
 
@@ -131,8 +131,11 @@ namespace MorFriesland.Controllers
                            where cat.Id == melding.Categorie_Id
                            select cat).SingleOrDefault();
 
+            string naam = melding.Naam;
 
             melding.Naam = categorienaam.Naam;
+
+            string email = melding.Email;
 
             if (ModelState.IsValid)
             {
@@ -172,7 +175,7 @@ namespace MorFriesland.Controllers
 
                 _context.Add(melding);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Alle));
             }
             ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Id", "Naam", melding.Categorie_Id);
             ViewData["User_id"] = new SelectList(_context.Users, "Id", "Id", melding.User_id);
@@ -227,7 +230,7 @@ namespace MorFriesland.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Alle));
             }
             ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Id", "Id", melding.Categorie_Id);
             ViewData["User_id"] = new SelectList(_context.Users, "Id", "Id", melding.User_id);
