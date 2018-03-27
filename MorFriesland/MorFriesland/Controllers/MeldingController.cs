@@ -183,7 +183,7 @@ namespace MorFriesland.Controllers
                 }
                 else
                 {
-                    beheerdermail = " nieu1702@student.nhl.nl";
+                    beheerdermail = "nieu1702@student.nhl.nl";
                 }
 
                 if (melding.Email != null)
