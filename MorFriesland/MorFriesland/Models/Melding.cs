@@ -26,6 +26,8 @@ namespace MorFriesland.Models
         public DateTime? Opgelosttijd { get; set; }
         public bool Gearchiveerd { get; set; }
 
+        public string Gemeente { get; set; }
+
         public string User_id { get; set; }
         [ForeignKey("User_id")]
         public ApplicationUser Melder { get; set; }
