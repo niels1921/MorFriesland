@@ -8,22 +8,20 @@ function getLocation() {
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(SetPosistion);
-    } else {
-
-    }
+    } 
 }
 
 navigator.permissions.query({ name: 'geolocation' })
     .then(function (permissionStatus) {
-        if (permissionStatus.state == "denied") {
+        if (permissionStatus.state === "denied") {
             defaultMap();
-        } else if (permissionStatus.state == "prompt") {
+        } else if (permissionStatus.state === "prompt") {
             defaultMap();
         }
 
 
         permissionStatus.onchange = function () {
-            if (this.state == "denied")
+            if (this.state === "denied")
             {
                 defaultMap();
             }

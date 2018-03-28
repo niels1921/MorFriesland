@@ -24,7 +24,7 @@ namespace MorFriesland.Models
         {
             string[] roles = new string[] { "Admin", "Beheerder", "Gebruiker" };
 
-            string username = "Admin";
+            // string username = "Admin";
             string email = "MORFrieslandadmin@gmail.com";
             string password = "Admin123-";
 
