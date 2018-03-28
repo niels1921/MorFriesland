@@ -137,6 +137,7 @@ namespace MorFriesland.Controllers
             melding.Naam = categorienaam.Naam;
             string beheerdermail = "";
             string beschrijving ="";
+            string host = "";
 
             string email = melding.Email;
 
@@ -174,7 +175,11 @@ namespace MorFriesland.Controllers
 
                 if (user != null)
                 {
-                    melding.Email = user.Email;
+                    if(melding.Email != "false")
+                    {
+                        melding.Email = user.Email;
+
+                    }
                     melding.User_id = userId;
                     melding.Melder = user;
                 }
@@ -209,6 +214,9 @@ namespace MorFriesland.Controllers
                     var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
                     var response = await client.SendEmailAsync(msg);
                 }
+
+               // host = HttpContext.Current.Request.Url.Host;
+
                 _context.Add(melding);
                 await _context.SaveChangesAsync();
                 var apiKey2 = Environment.GetEnvironmentVariable("SENDGRID_KEY", EnvironmentVariableTarget.User);
