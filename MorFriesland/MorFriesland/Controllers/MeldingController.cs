@@ -136,6 +136,7 @@ namespace MorFriesland.Controllers
 
             melding.Naam = categorienaam.Naam;
             string beheerdermail = "";
+            string beschrijving ="";
 
             string email = melding.Email;
 
@@ -182,12 +183,11 @@ namespace MorFriesland.Controllers
                     melding.User_id = null;
                 }
                 melding.Opgelosttijd = null;
-                //Convert.ToDouble(3.2, CultureInfo.InvariantCulture);
                 double lat = Convert.ToDouble(melding.Lat, CultureInfo.InvariantCulture);
 
                 if(lat > 53.2012379)
                 {
-                    beheerdermail = "harm.vandenbogert@outlook.com";
+                    beheerdermail = "klaas.vanderwerk@gmail.com";
                 }
                 else
                 {
@@ -197,7 +197,7 @@ namespace MorFriesland.Controllers
                 if (melding.Email != null)
                 {
                     string mail = melding.Email;
-                    string beschrijving = melding.Beschrijving;
+                    beschrijving = melding.Beschrijving;
 
                     var apiKey = Environment.GetEnvironmentVariable("SENDGRID_KEY", EnvironmentVariableTarget.User);
                     var client = new SendGridClient(apiKey);
@@ -205,36 +205,26 @@ namespace MorFriesland.Controllers
                     var subject = "Melding" + melding.Naam;
                     var to = new EmailAddress(mail);
                     var plainTextContent = "koptext?";
-                    var htmlContent = "Mail van de melding" + Environment.NewLine + "Beschrijving: " + beschrijving + Environment.NewLine;
-                    var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
-                    var response = await client.SendEmailAsync(msg);
-                    var to2 = new EmailAddress(beheerdermail);
-                    var htmlContent2 = "Mail van de melding" + Environment.NewLine + "Beschrijving: " + beschrijving + Environment.NewLine;
-                    //beheerder linkje naar de melding detail pagina
-                    var msg2 = MailHelper.CreateSingleEmail(from, to2, subject, plainTextContent, htmlContent2);
-                    var response2 = await client.SendEmailAsync(msg2);
-                }
-                else
-                {
-                    string beschrijving = melding.Beschrijving;
-
-                    var apiKey = Environment.GetEnvironmentVariable("SENDGRID_KEY", EnvironmentVariableTarget.User);
-                    var client = new SendGridClient(apiKey);
-                    var from = new EmailAddress("klaas.vanderwerk@gmail.com", "MOR Friesland");
-                    var subject = "Melding" + melding.Naam;
-                    var to = new EmailAddress(beheerdermail);
-                    var plainTextContent = "koptext?";
-                    var htmlContent = "Mail van de melding" + Environment.NewLine + "Beschrijving: " + beschrijving + Environment.NewLine;
-                    //beheerder linkje naar de melding detail pagina
+                    var htmlContent = "Mail van de melding <br> Beschrijving: " + beschrijving + Environment.NewLine;
                     var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
                     var response = await client.SendEmailAsync(msg);
                 }
                 _context.Add(melding);
                 await _context.SaveChangesAsync();
+                var apiKey2 = Environment.GetEnvironmentVariable("SENDGRID_KEY", EnvironmentVariableTarget.User);
+                var client2 = new SendGridClient(apiKey2);
+                var from2 = new EmailAddress("klaas.vanderwerk@gmail.com", "MOR Friesland");
+                var subject2 = "Melding" + melding.Naam;
+                var to2 = new EmailAddress(beheerdermail);
+                var plainTextContent2 = "koptext?";
+                var htmlContent2 = "Mail van de melding " + melding.Naam + "<br> Beschrijving: <br> " + beschrijving + "<br>" +
+                    " <a href=https://localhost:44344/beheer/Details/" + melding.Id + "> Beheer pagina</a>";
+                var msg2 = MailHelper.CreateSingleEmail(from2, to2, subject2, plainTextContent2, htmlContent2);
+                var response2 = client2.SendEmailAsync(msg2);
                 return RedirectToAction(nameof(Alle));
             }
-
             
+
             ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Id", "Naam", melding.Categorie_Id);
             ViewData["User_id"] = new SelectList(_context.Users, "Id", "Id", melding.User_id);
             return View(melding);
