@@ -1,6 +1,10 @@
 ﻿//Variabelen die later in de code gevuld worden;
 
+
+
+
 var locationstring = "";
+
 
 var url = "";
 
@@ -61,6 +65,7 @@ function Ondrag(event) {
 
 
 
+
     url = "https://geodata.nationaalgeoregister.nl/locatieserver/v3/free?lat=" + lat + "&lon=" + lng;
 
 
@@ -68,8 +73,15 @@ function Ondrag(event) {
 
 
 }
+$("#meldingsubmit").click(function () {
+
+    $(".loader").show();
+
+});
+
 
 $("#submit").submit(function (e) {
+
 
     form = this;
 
@@ -81,12 +93,21 @@ $("#submit").submit(function (e) {
 
     $.getJSON(url, function (result) {
         $.each(result, function (i, field) {
-            console.log(field.docs[0].gemeentenaam);
+            console.log(field.docs[0]);
             gemeentenaam = field.docs[0].gemeentenaam;
 
             $("#gemeente").val(gemeentenaam);
 
-            form.submit();
+            if (field.docs[0].provincienaam != "Friesland") {
+                alert("U kunt helaas geen melding doen buiten Friesland");
+                $(".loader").hide();
+
+            } else {
+                form.submit();
+            }
+
+            
+
 
         })
     });
@@ -126,6 +147,9 @@ function SetPosistion(position) {
         origin: new google.maps.Point(0, 0), // origin
         anchor: new google.maps.Point(0, 0) // anchor
     };
+
+
+
 
     Locationmarker = new google.maps.Marker({
         map: map,
@@ -197,7 +221,6 @@ function SetPosistion(position) {
         infowindowContent.children['place-address'].textContent =
             place.formatted_address;
         infowindow.open(map, Locationmarker);
-
 
 
 
@@ -304,6 +327,9 @@ function defaultMap() {
 
         $("#nieuwlat").val(place.geometry.location.lat());
         $("#nieuwlong").val(place.geometry.location.lng());
+
+
+
 
         console.log(place.geometry.location.lat());
 

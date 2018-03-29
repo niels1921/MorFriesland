@@ -12,6 +12,7 @@ namespace MorFriesland.Models
         public int Id { get; set; }
         public string Naam { get; set; }
 
+        [Display(Name ="Soort melding")]
         public int Categorie_Id { get; set; }
         [ForeignKey("Categorie_Id")]
         public Categorie Categorie { get; set; }

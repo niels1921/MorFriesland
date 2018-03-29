@@ -17,6 +17,7 @@ using System.Net.Mail;
 using SendGrid.Helpers.Mail;
 using SendGrid;
 using System.Globalization;
+using System.Web;
 
 namespace MorFriesland.Controllers
 {
@@ -132,14 +133,26 @@ namespace MorFriesland.Controllers
                            where cat.Id == melding.Categorie_Id
                            select cat).SingleOrDefault();
 
+            Bronhouder bronhouder = (from bron in _context.Bronhouder
+                                     where bron.Gemeente == melding.Gemeente
+                                     select bron).SingleOrDefault();
+            string bronhoudermail = "";
+            if (bronhouder != null)
+            {
+                bronhoudermail = bronhouder.Email;
+            } else
+            {
+                bronhoudermail = "nieu1702@student.nhl.nl";   
+            }
+
             string naam = melding.Naam;
+            string email2 = melding.Email;
 
             melding.Naam = categorienaam.Naam;
-            string beheerdermail = "";
             string beschrijving ="";
-            string host = "";
 
             string email = melding.Email;
+            
 
             if (ModelState.IsValid)
             {
@@ -175,7 +188,7 @@ namespace MorFriesland.Controllers
 
                 if (user != null)
                 {
-                    if(melding.Email != "false")
+                    if(email2 != "false")
                     {
                         melding.Email = user.Email;
 
@@ -188,16 +201,7 @@ namespace MorFriesland.Controllers
                     melding.User_id = null;
                 }
                 melding.Opgelosttijd = null;
-                double lat = Convert.ToDouble(melding.Lat, CultureInfo.InvariantCulture);
 
-                if(lat > 53.2012379)
-                {
-                    beheerdermail = "klaas.vanderwerk@gmail.com";
-                }
-                else
-                {
-                    beheerdermail = "nieu1702@student.nhl.nl";
-                }
 
                 if (melding.Email != null)
                 {
@@ -220,11 +224,11 @@ namespace MorFriesland.Controllers
                 var client2 = new SendGridClient(apiKey2);
                 var from2 = new EmailAddress("klaas.vanderwerk@gmail.com", "MOR Friesland");
                 var subject2 = "Melding" + melding.Naam;
-                var to2 = new EmailAddress(beheerdermail);
+                var to2 = new EmailAddress(bronhoudermail);
                 var plainTextContent2 = "koptext?";
                 //pas de localhost aan naar je eigenport om het te laten werken
                 var htmlContent2 = "Mail van de melding " + melding.Naam + "<br> Beschrijving: <br> " + beschrijving + "<br>" +
-                    " <a href=https://localhost:44344/beheer/Details/" + melding.Id + "> Beheer pagina</a>";
+                    " <a href=https://Localhost:44334/beheer/Details/" + melding.Id + "> Beheer pagina</a>";
                 var msg2 = MailHelper.CreateSingleEmail(from2, to2, subject2, plainTextContent2, htmlContent2);
                 var response2 = client2.SendEmailAsync(msg2);
                 return RedirectToAction(nameof(Alle));
