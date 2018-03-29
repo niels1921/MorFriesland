@@ -132,10 +132,21 @@ namespace MorFriesland.Controllers
                            where cat.Id == melding.Categorie_Id
                            select cat).SingleOrDefault();
 
+            Bronhouder bronhouder = (from bron in _context.Bronhouder
+                                     where bron.Gemeente == melding.Gemeente
+                                     select bron).SingleOrDefault();
+            string bronhoudermail = "";
+            if (bronhouder != null)
+            {
+                bronhoudermail = bronhouder.Email;
+            } else
+            {
+                bronhoudermail = "nieu1702@student.nhl.nl";   
+            }
+
             string naam = melding.Naam;
 
             melding.Naam = categorienaam.Naam;
-            string beheerdermail = "";
             string beschrijving ="";
 
             string email = melding.Email;
@@ -183,16 +194,7 @@ namespace MorFriesland.Controllers
                     melding.User_id = null;
                 }
                 melding.Opgelosttijd = null;
-                double lat = Convert.ToDouble(melding.Lat, CultureInfo.InvariantCulture);
 
-                if(lat > 53.2012379)
-                {
-                    beheerdermail = "klaas.vanderwerk@gmail.com";
-                }
-                else
-                {
-                    beheerdermail = "nieu1702@student.nhl.nl";
-                }
 
                 if (melding.Email != null)
                 {
@@ -215,7 +217,7 @@ namespace MorFriesland.Controllers
                 var client2 = new SendGridClient(apiKey2);
                 var from2 = new EmailAddress("klaas.vanderwerk@gmail.com", "MOR Friesland");
                 var subject2 = "Melding" + melding.Naam;
-                var to2 = new EmailAddress(beheerdermail);
+                var to2 = new EmailAddress(bronhoudermail);
                 var plainTextContent2 = "koptext?";
                 var htmlContent2 = "Mail van de melding " + melding.Naam + "<br> Beschrijving: <br> " + beschrijving + "<br>" +
                     " <a href=https://localhost:44344/beheer/Details/" + melding.Id + "> Beheer pagina</a>";

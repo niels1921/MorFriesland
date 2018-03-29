@@ -144,6 +144,49 @@ footer {
     border: #244994;
 }
 
+.loader {
+    margin-left: 5px;
+    margin-top: 4px;
+    float: left;
+    border: 2px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 2px solid #244994;
+    width: 22px;
+    height: 22px;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+}
+
+#meldingsubmit{
+    float: left;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+
+
+
+
 .menubutton {
     background-color: #244994;
     border-radius: 8px;

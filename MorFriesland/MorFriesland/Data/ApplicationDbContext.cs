@@ -29,5 +29,7 @@ namespace MorFriesland.Data
         public DbSet<MorFriesland.Models.Categorie> Categorie { get; set; }
 
         public DbSet<MorFriesland.Models.AccountViewModels.AddRoleUserViewModel> AddRoleUserViewModel { get; set; }
+
+        public DbSet<MorFriesland.Models.Bronhouder> Bronhouder { get; set; }
     }
 }
