@@ -11,9 +11,10 @@ using System;
 namespace MorFriesland.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180328191322_bronhouder")]
+    partial class bronhouder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -191,20 +192,6 @@ namespace MorFriesland.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("MorFriesland.Models.Bronhouder", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Email");
-
-                    b.Property<string>("Gemeente");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Bronhouder");
                 });
 
             modelBuilder.Entity("MorFriesland.Models.Categorie", b =>

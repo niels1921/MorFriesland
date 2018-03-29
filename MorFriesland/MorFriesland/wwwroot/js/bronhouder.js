@@ -1,11 +1,12 @@
 ﻿//Variabelen die later in de code gevuld worden;
 
+var url = "";
 
-
-defaultMap();
 
 //Laad de map in
 function initMap() {
+    url = "https://geodata.nationaalgeoregister.nl/locatieserver/v3/free?lat=53.1641642&lon=5.7817542";
+
     var fryslan = { lat: 53.1641642, lng: 5.7817542 };
     var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 10,
@@ -18,49 +19,18 @@ function initMap() {
         anchor: new google.maps.Point(0, 0) // anchor
     };
 
-    var icon2 = {
-        url: "/images/Pompebled.png",
-        scaledSize: new google.maps.Size(35, 35), // scaled size
-        origin: new google.maps.Point(0, 0), // origin
-        anchor: new google.maps.Point(0, 0) // anchor
-    };
-
     Locationmarker = new google.maps.Marker({
         map: map,
-        draggable: false,
+        draggable: true,
+        animation: google.maps.Animation.DROP,
+        position: fryslan,
         icon: icon
     });
-
-    $('#meldingen[data-lat]').each(function () {
-
-        var latdata = $(this).data('lat');
-        var lngdata = $(this).data('lng');
-        var Name = $(this).data('name');
-        var Beschrijving = $(this).data('beschrijving');
-        var Img = $(this).data('img');
-
-        var content = "<div class='col-md-12 nopadding'><div class='col-md-4 nopadding'><img style='max-width: 100%;' src='" + Img + "'></div><div class='col-md-8 infobeschrijving'><b>" + Name + "</b><br/>" + Beschrijving + "</div></div>";
+    Locationmarker.addListener('click', toggleBounce);
+    Locationmarker.addListener('drag', Ondrag);
+    Locationmarker.addListener('dragend', Ondrag);
 
 
-        var marker = new google.maps.Marker({
-            position: { lat: latdata, lng: lngdata },
-            title: 'Home Center',
-            map: map,
-            icon: icon2
-
-        });
-
-        var infoWindow = new google.maps.InfoWindow({
-            content: content,
-            maxWidth: 400
-
-        });
-
-        google.maps.event.addListener(marker, 'click', function () {
-            infoWindow.open(map, marker);
-        });
-
-    });
 
     var input = document.getElementById('pac-input');
 
@@ -93,7 +63,6 @@ function initMap() {
 
         // Set the position of the marker using the place ID and location.
         Locationmarker.setPosition(place.geometry.location);
-        Locationmarker.setVisible(true);
 
 
 
@@ -108,10 +77,15 @@ function initMap() {
         $("#nieuwlat").val(place.geometry.location.lat());
         $("#nieuwlong").val(place.geometry.location.lng());
 
-        console.log(place.geometry.location.lat());
+
+        url = "https://geodata.nationaalgeoregister.nl/locatieserver/v3/free?lat=" + place.geometry.location.lat() + "&lon=" + place.geometry.location.lng();
+
+
+
+        console.log(url);
 
     });
-}
+ }
 
 function toggleBounce() {
 
@@ -125,6 +99,8 @@ function toggleBounce() {
 
 
 function Ondrag(event) {
+
+
     lat = event.latLng.lat();
     lng = event.latLng.lng();
 
@@ -134,12 +110,53 @@ function Ondrag(event) {
 
 
 
+    url = "https://geodata.nationaalgeoregister.nl/locatieserver/v3/free?lat=" + lat + "&lon=" + lng;
+
+
 
 
 }
+$("#meldingsubmit").click(function () {
+
+    $(".loader").show();
+
+});
 
 
+$("#submit").submit(function (e) {
 
-function defaultMap() {
+
+    form = this;
+
+    event.preventDefault();
+
    
-}
+
+    var gemeentenaam = "";
+
+    $.getJSON(url, function (result) {
+        $.each(result, function (i, field) {
+            console.log(field.docs[0]);
+            gemeentenaam = field.docs[0].gemeentenaam;
+
+            $("#gemeente").val(gemeentenaam);
+
+            if (field.docs[0].provincienaam !== "Friesland") {
+                alert("Kies een gemeente binnen Friesland");
+                $(".loader").hide();
+
+            } else {
+                form.submit();
+            }
+
+
+
+
+        });
+    });
+    
+});
+
+
+
+
