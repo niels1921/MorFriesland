@@ -1,7 +1,7 @@
 ﻿@model MorFriesland.Models.Melding
 
 @{
-   
+
 }
 
 <!DOCTYPE html>
@@ -13,69 +13,99 @@
 </head>
 <body>
 
-<div>
-    <h4>Melding</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Beschrijving)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Beschrijving)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Foto)
-        </dt>
+    <div>
+        <h4>Melding</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Categorie)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Naam)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Beschrijving)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Beschrijving)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Foto)
+            </dt>
+            @if (Model.Foto != null)
+    {
         <dd>
             @Html.DisplayFor(model => model.Foto)
         </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
+}
+else
+{
+        <dd>
+            Geen foto
+        </dd>
+}
+            <dt>
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+            @if (Model.Melder != null)
+    {
         <dd>
             @Html.DisplayFor(model => model.Email)
         </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Long)
-        </dt>
+}
+else
+{
         <dd>
-            @Html.DisplayFor(model => model.Long)
+            Wil niet op de hoogte gehouden worden
         </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Lat)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Lat)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Opgelosttijd)
-        </dt>
+}
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Opgelosttijd)
+            </dt>
+            @if (Model.Opgelosttijd != null)
+    {
         <dd>
             @Html.DisplayFor(model => model.Opgelosttijd)
         </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Gearchiveerd)
-        </dt>
+}
+else
+{
         <dd>
-            @Html.DisplayFor(model => model.Gearchiveerd)
+            Nog niet opgelost
         </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Categorie)
-        </dt>
+}
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Gearchiveerd)
+            </dt>
+            @if (Model.Gearchiveerd == false)
+    {
         <dd>
-            @Html.DisplayFor(model => model.Categorie.Id)
+            Nog niet gearchiveerd
         </dd>
+}
+else
+{
+        <dd>
+            Gearchiveerd
+        </dd>
+}
+
+            @if (Model.Melder == null)
+    {
         <dt>
             @Html.DisplayNameFor(model => model.Melder)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Melder.Id)
+            Anoniem
         </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+}
+        </dl>
+    </div>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+        <a asp-action="Index">Back to List</a>
+    </div>
 </body>
 </html>
