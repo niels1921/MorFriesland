@@ -58,12 +58,31 @@
     width: 100%;
 }
 
+
     .controls:focus {
         border-color: #4d90fe;
     }
+    .btn btn-default {
+    background-color: #244994;
+    color: #fff;
+    border-radius: 8px;
+}
 
+    .btn-default {
+    background-color: #244994;
+    color: #fff;
+    border-radius: 8px;
+}
+.navbar-inverse .navbar-link {
+    background-color: #244994;
+    color: #fff;
+    border-radius: 8px;
+    margin-right: 10px;
+    margin-top: 4px;
+    padding: 8px 25px !important;
+}
 
-.btn.btn-default.meldingbutton {
+    .btn.btn-default.meldingbutton {
     background-color: #244994;
     border-color: #244994;
     color: white;
@@ -89,7 +108,7 @@
 #map #infowindow-content {
     display: inline;
 }
-
+https://localhost:44375/Home
 .logo{
     max-width: 100%;
 }
@@ -99,6 +118,27 @@ a.navbar-brand {
     max-width: 200px;
     padding: 0px;
     margin-right: 20px;
+}
+
+.btn-link:hover, .btn-link:focus {
+    text-decoration: none;
+}
+
+.btn-default:hover {
+    color: white;
+    background-color: #2d59b4;
+    border-color: #2d59b4;
+}
+.btn-default:active, .btn-default.active, .open > .dropdown-toggle.btn-default {
+    color: #fff;
+    background-color: #2d59b4;
+    border-color: #2d59b4;
+}
+
+.btn-default:active:hover, .btn-default.active:hover, .open > .dropdown-toggle.btn-default:hover, .btn-default:active:focus, .btn-default.active:focus, .open > .dropdown-toggle.btn-default:focus, .btn-default:active.focus, .btn-default.active.focus, .open > .dropdown-toggle.btn-default.focus {
+    color: #fff;
+    background-color: #2d59b4;
+    border-color: #2d59b4;
 }
 
 .navbar-inverse {
@@ -151,6 +191,11 @@ footer {
     margin-top: 4px;
     padding: 8px 25px !important;
 }
+
+.inputbutton{
+    
+}
+
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
     /* Hide captions */
@@ -158,3 +203,4 @@ footer {
         display: none;
     }
 }
+

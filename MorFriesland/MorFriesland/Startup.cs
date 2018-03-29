@@ -51,7 +51,7 @@ namespace MorFriesland
                 options.Password.RequireLowercase = true;   
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
-                options.SignIn.RequireConfirmedEmail = true;
+                options.SignIn.RequireConfirmedEmail = false;
             })
             
                 .AddEntityFrameworkStores<ApplicationDbContext>()
