@@ -267,6 +267,10 @@ namespace MorFriesland.Controllers
                 return NotFound();
             }
 
+            var meldingen = from a in _context.Melding
+                            where a.Id == id
+                            select a;
+
             if (ModelState.IsValid)
             {
                 try
