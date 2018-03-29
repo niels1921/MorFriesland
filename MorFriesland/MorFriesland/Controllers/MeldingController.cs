@@ -134,11 +134,11 @@ namespace MorFriesland.Controllers
                            select cat).SingleOrDefault();
 
             string naam = melding.Naam;
+            string email2 = melding.Email;
 
             melding.Naam = categorienaam.Naam;
             string beheerdermail = "";
             string beschrijving ="";
-            string host = "";
 
             string email = melding.Email;
             
@@ -177,7 +177,7 @@ namespace MorFriesland.Controllers
 
                 if (user != null)
                 {
-                    if(melding.Email != "false")
+                    if(email2 != "false")
                     {
                         melding.Email = user.Email;
 
