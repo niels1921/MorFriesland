@@ -17,6 +17,7 @@ using System.Net.Mail;
 using SendGrid.Helpers.Mail;
 using SendGrid;
 using System.Globalization;
+using System.Web;
 
 namespace MorFriesland.Controllers
 {
@@ -139,6 +140,7 @@ namespace MorFriesland.Controllers
             string beschrijving ="";
 
             string email = melding.Email;
+            
 
             if (ModelState.IsValid)
             {
@@ -218,7 +220,7 @@ namespace MorFriesland.Controllers
                 var to2 = new EmailAddress(beheerdermail);
                 var plainTextContent2 = "koptext?";
                 var htmlContent2 = "Mail van de melding " + melding.Naam + "<br> Beschrijving: <br> " + beschrijving + "<br>" +
-                    " <a href=https://localhost:44344/beheer/Details/" + melding.Id + "> Beheer pagina</a>";
+                    " <a href=https://Localhost:44334/beheer/Details/" + melding.Id + "> Beheer pagina</a>";
                 var msg2 = MailHelper.CreateSingleEmail(from2, to2, subject2, plainTextContent2, htmlContent2);
                 var response2 = client2.SendEmailAsync(msg2);
                 return RedirectToAction(nameof(Alle));
