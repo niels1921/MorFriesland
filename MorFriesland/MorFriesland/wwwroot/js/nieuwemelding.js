@@ -2,6 +2,8 @@
 
 var locationstring = "";
 
+var url = "";
+
 getLocation();
 
 function getLocation() {
@@ -58,13 +60,53 @@ function Ondrag(event) {
     $("#nieuwlong").val(lng);
 
 
+
+    url = "https://geodata.nationaalgeoregister.nl/locatieserver/v3/free?lat=" + lat + "&lon=" + lng;
+
+
+    console.log(url);
+
+
 }
+
+$("#submit").submit(function (e) {
+
+    form = this;
+
+    event.preventDefault();
+
+   
+
+    var gemeentenaam = "";
+
+    $.getJSON(url, function (result) {
+        $.each(result, function (i, field) {
+            console.log(field.docs[0].gemeentenaam);
+            gemeentenaam = field.docs[0].gemeentenaam;
+
+            $("#gemeente").val(gemeentenaam);
+
+            form.submit();
+
+        })
+    });
+    
+});
+
+
 
 
 function SetPosistion(position) {
 
+
+
     lat = position.coords.latitude;
     lng = position.coords.longitude;
+
+    url = "https://geodata.nationaalgeoregister.nl/locatieserver/v3/free?lat=" + lat + "&lon=" + lng;
+
+
+    console.log(url);
 
     $("#nieuwlat").val(lat);
     $("#nieuwlong").val(lng);
@@ -163,10 +205,14 @@ function SetPosistion(position) {
         $("#nieuwlong").val(place.geometry.location.lng());
 
         console.log(place.geometry.location.lat());
+        url = "https://geodata.nationaalgeoregister.nl/locatieserver/v3/free?lat=" + place.geometry.location.lat() + "&lon=" + place.geometry.location.lng();
 
+        console.log(url);
     });
 
 }
+
+
  
 function defaultMap() {
     var fryslan = { lat: 53.1641642, lng: 5.7817542 };

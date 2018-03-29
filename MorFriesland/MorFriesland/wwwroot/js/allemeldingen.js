@@ -132,6 +132,10 @@ function Ondrag(event) {
     $("#nieuwlong").val(lng);
 
 
+
+
+
+
 }
 
 
