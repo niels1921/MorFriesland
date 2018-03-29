@@ -214,9 +214,6 @@ namespace MorFriesland.Controllers
                     var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
                     var response = await client.SendEmailAsync(msg);
                 }
-
-               // host = HttpContext.Current.Request.Url.Host;
-
                 _context.Add(melding);
                 await _context.SaveChangesAsync();
                 var apiKey2 = Environment.GetEnvironmentVariable("SENDGRID_KEY", EnvironmentVariableTarget.User);
@@ -225,6 +222,7 @@ namespace MorFriesland.Controllers
                 var subject2 = "Melding" + melding.Naam;
                 var to2 = new EmailAddress(beheerdermail);
                 var plainTextContent2 = "koptext?";
+                //pas de localhost aan naar je eigenport om het te laten werken
                 var htmlContent2 = "Mail van de melding " + melding.Naam + "<br> Beschrijving: <br> " + beschrijving + "<br>" +
                     " <a href=https://localhost:44344/beheer/Details/" + melding.Id + "> Beheer pagina</a>";
                 var msg2 = MailHelper.CreateSingleEmail(from2, to2, subject2, plainTextContent2, htmlContent2);
@@ -232,7 +230,6 @@ namespace MorFriesland.Controllers
                 return RedirectToAction(nameof(Alle));
             }
             
-
             ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Id", "Naam", melding.Categorie_Id);
             ViewData["User_id"] = new SelectList(_context.Users, "Id", "Id", melding.User_id);
             return View(melding);
