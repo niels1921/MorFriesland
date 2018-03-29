@@ -15,19 +15,22 @@ namespace MorFriesland.Models
         public int Categorie_Id { get; set; }
         [ForeignKey("Categorie_Id")]
         public Categorie Categorie { get; set; }
-        public string Beschrijving { get; set; }
 
-        [RegularExpression(@"^.*\.(png|PNG)$", ErrorMessage = "Je mag alleen .jpg en .png bestanden uploaden")]
+        public string Beschrijving { get; set; }            
         public string Foto { get; set; }
-
         public string Email { get; set; }
         public string Long { get; set; }
         public string Lat { get; set; }
         public DateTime? Opgelosttijd { get; set; }
         public bool Gearchiveerd { get; set; }
 
+
+        public string Gemeente { get; set; }
+
+
         public string User_id { get; set; }
         [ForeignKey("User_id")]
+
         public ApplicationUser Melder { get; set; }
     }
 }
