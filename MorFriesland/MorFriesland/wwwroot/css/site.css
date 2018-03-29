@@ -108,10 +108,7 @@
 #map #infowindow-content {
     display: inline;
 }
-https://localhost:44375/Home
-.logo{
-    max-width: 100%;
-}
+
 
 a.navbar-brand {
 
@@ -192,10 +189,16 @@ footer {
     padding: 8px 25px !important;
 }
 
-.inputbutton{
-    
+.logo {
+    max-width: 100%;
 }
 
+.navbar-brand > img {
+    display: block;
+    padding-left: 10px;
+    padding-left: 10px;
+    max-width: 100%;
+}
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
     /* Hide captions */
