@@ -202,11 +202,12 @@ namespace MorFriesland.Controllers
                 }
                 melding.Opgelosttijd = null;
 
+                beschrijving = melding.Beschrijving;
+
 
                 if (melding.Email != null)
                 {
                     string mail = melding.Email;
-                    beschrijving = melding.Beschrijving;
 
                     var apiKey = Environment.GetEnvironmentVariable("SENDGRID_KEY", EnvironmentVariableTarget.User);
                     var client = new SendGridClient(apiKey);

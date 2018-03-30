@@ -13,11 +13,11 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Melding.Categorie_Id" class="control-label"></label>
-                <select asp-for="Melding.Categorie_Id" class="form-control" asp-items="ViewBag.Categorie_Id"></select>
+                <select  asp-for="Melding.Categorie_Id" class="form-control" asp-items="ViewBag.Categorie_Id"></select>
             </div>
             <div class="form-group">
                 <label asp-for="Melding.Beschrijving" class="control-label"></label>
-                <input asp-for="Melding.Beschrijving" class="form-control" />
+                <textarea asp-for="Melding.Beschrijving" class="form-control" rows="4"> </textarea>
                 <span asp-validation-for="Melding.Beschrijving" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -25,22 +25,25 @@
 
                 <input type="hidden" asp-for="Melding.Foto" />
 
-                <input type="file" name="Image" accept="image/jpeg,image/png" />
+                <input type="file" class="bestand" name="Image" accept="image/jpeg,image/png" />
                 <span asp-validation-for="Melding.Foto" class="text-danger"></span>
 
             </div>
+
+ 
+
             <div class="form-group">
-                <label><input type="checkbox" id="EmailCheckbox" value="false" /> Wilt u op de hoogte gehouden worden van uw melding?</label>
+                <label><input type="checkbox" id="EmailCheckbox" value="false" /> Houdt mij op de hoogte</label>
                 @if (!User.Identity.IsAuthenticated)
-    {
+        {
             <input id="email" asp-for="Melding.Email" placeholder="Email" class="form-control" />
             <div style="display: none;" data-ingelogd="loggedout" class="ingelogd"></div>
 }
 else
 {
-            <input type="hidden" id="email" asp-for="Melding.Email" placeholder="Email" value="false" class="form-control" />
+        <input type="hidden" id="email" asp-for="Melding.Email" placeholder="Email" value="false" class="form-control" />
 
-            <div style="display: none;" data-ingelogd="loggedin" class="ingelogd"></div>
+        <div style="display: none;" data-ingelogd="loggedin" class="ingelogd"></div>
 }
 
                 <span asp-validation-for="Melding.Email" class="text-danger"></span>
@@ -82,10 +85,6 @@ else
     <div id="meldingen" data-lat="@melding.Lat" data-lng="@melding.Long"></div>
 }
 
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

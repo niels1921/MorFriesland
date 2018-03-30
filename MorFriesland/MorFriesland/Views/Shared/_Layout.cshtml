@@ -6,14 +6,16 @@
     <title>@ViewData["Title"] - MorFriesland</title>
 
     <environment include="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/css/site.css" />
+
+
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
@@ -50,13 +52,12 @@
                         <span class="icon-bar"></span>
 
                     </button>
-                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand"><img class="logo" src="~/images/logo provincie fryslan.png"></a>
+                    <a asp-area="" asp-controller="Melding" asp-action="Index" class="navbar-brand"><img class="logo" src="~/images/logo provincie fryslan.png"></a>
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li><a class="menubutton" asp-area="" asp-controller="Melding" asp-action="index">Nieuwe melding</a></li>
                         <li><a class="menubutton" asp-area="" asp-controller="Melding" asp-action="Alle">Meldingen</a></li>
-                        <li><a class="menubutton" asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                     </ul>
                     @await Html.PartialAsync("_LoginPartial")
                 </div>
@@ -65,7 +66,6 @@
         <div class="container body-content">
             <div class="content">
             @RenderBody()
-            <hr />
                 </div>
 
         </div>

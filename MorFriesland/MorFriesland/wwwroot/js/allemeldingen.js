@@ -39,7 +39,13 @@ function initMap() {
         var Beschrijving = $(this).data('beschrijving');
         var Img = $(this).data('img');
 
-        var content = "<div class='col-md-12 nopadding'><div class='col-md-4 nopadding'><img style='max-width: 100%;' src='" + Img + "'></div><div class='col-md-8 infobeschrijving'><b>" + Name + "</b><br/>" + Beschrijving + "</div></div>";
+        var content = "";
+        if (Img !== "/uploads/" + Name + "/") {
+            content = "<div class='col-md-12 nopadding'><div class='col-md-4 nopadding'><img style='max-width: 100%;' src='" + Img + "'></div><div class='col-md-8 infobeschrijving'><b>" + Name + "</b><br/>" + Beschrijving + "</div></div>";
+        } else {
+            content = "<div class='col-md-12 nopadding'><b>" + Name + "</b><br/>" + Beschrijving + "</div>";
+        }
+
 
 
         var marker = new google.maps.Marker({
