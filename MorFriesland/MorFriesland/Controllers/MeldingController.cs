@@ -124,6 +124,8 @@ namespace MorFriesland.Controllers
         public async Task<IActionResult> Index([Bind("Id,Categorie_Id,Beschrijving,Foto,Email,Long,Lat,Gearchiveerd,User_id,Gemeente")] Melding melding, IFormFile Image)
         {
             string userId = this.User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
+            //var apiKey = System.Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
+            //var client = new SendGridClient(apiKey);
 
             ApplicationUser user = (from x in _context.Users
                             where x.Id == userId
@@ -208,29 +210,46 @@ namespace MorFriesland.Controllers
                     string mail = melding.Email;
                     beschrijving = melding.Beschrijving;
 
-                    var apiKey = Environment.GetEnvironmentVariable("SENDGRID_KEY", EnvironmentVariableTarget.User);
+                    //var apiKey = Environment.GetEnvironmentVariable("SENDGRID_KEY", EnvironmentVariableTarget.User);
+                    var apiKey = Environment.GetEnvironmentVariable("SENDGRID_KEY");
                     var client = new SendGridClient(apiKey);
-                    var from = new EmailAddress("klaas.vanderwerk@gmail.com", "MOR Friesland");
-                    var subject = "Melding" + melding.Naam;
-                    var to = new EmailAddress(mail);
-                    var plainTextContent = "koptext?";
-                    var htmlContent = "Mail van de melding <br> Beschrijving: " + beschrijving + Environment.NewLine;
-                    var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+                    var msg = new SendGridMessage()
+                    {
+                        From = new EmailAddress("boge1300@student.nhl.nl", "mormelding"),
+                        Subject = "Hello World from the SendGrid CSharp SDK!",
+                        PlainTextContent = "Hello, Email!",
+                        HtmlContent = "<strong>Hello, Email!</strong>"
+                    };
+                    msg.AddTo(new EmailAddress("harm.vandenbogert@outlook.com", "harm"));
+                    //var from = new EmailAddress("boge1300@student.nhl.nl", "MOR Friesland");
+                    //var subject = "Melding" + melding.Naam;
+                    //var to = new EmailAddress(mail);
+                    //var plainTextContent = "koptext?";
+                    //var htmlContent = "Mail van de melding <br> Beschrijving: " + beschrijving + Environment.NewLine;
+                    //var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
                     var response = await client.SendEmailAsync(msg);
                 }
                 _context.Add(melding);
                 await _context.SaveChangesAsync();
-                var apiKey2 = Environment.GetEnvironmentVariable("SENDGRID_KEY", EnvironmentVariableTarget.User);
+                var apiKey2 = Environment.GetEnvironmentVariable("SENDGRID_KEY");
                 var client2 = new SendGridClient(apiKey2);
-                var from2 = new EmailAddress("klaas.vanderwerk@gmail.com", "MOR Friesland");
-                var subject2 = "Melding" + melding.Naam;
-                var to2 = new EmailAddress(bronhoudermail);
-                var plainTextContent2 = "koptext?";
-                //pas de localhost aan naar je eigenport om het te laten werken
-                var htmlContent2 = "Mail van de melding " + melding.Naam + "<br> Beschrijving: <br> " + beschrijving + "<br>" +
-                    " <a href=https://Localhost:44334/beheer/Details/" + melding.Id + "> Beheer pagina</a>";
-                var msg2 = MailHelper.CreateSingleEmail(from2, to2, subject2, plainTextContent2, htmlContent2);
-                var response2 = client2.SendEmailAsync(msg2);
+                var msg2 = new SendGridMessage()
+                {
+                    From = new EmailAddress("boge1300@student.nhl.nl", "mormelding"),
+                    Subject = "Hello World from the SendGrid CSharp SDK!",
+                    PlainTextContent = "Hello, Email!",
+                    HtmlContent = "<strong>Hello, Email!</strong>"
+                };
+                msg2.AddTo(new EmailAddress("harm.vandenbogert@outlook.com", "Harm"));
+                //var from2 = new EmailAddress("boge1300@student.nhl.nl", "MOR Friesland");
+                //var subject2 = "Melding" + melding.Naam;
+                //var to2 = new EmailAddress(bronhoudermail);
+                //var plainTextContent2 = "koptext?";
+                ////pas de localhost aan naar je eigenport om het te laten werken
+                //var htmlContent2 = "Mail van de melding " + melding.Naam + "<br> Beschrijving: <br> " + beschrijving + "<br>" +
+                //    " <a href=https://Localhost:44334/beheer/Details/" + melding.Id + "> Beheer pagina</a>";
+                //var msg2 = MailHelper.CreateSingleEmail(from2, to2, subject2, plainTextContent2, htmlContent2);
+                //var response2 = client2.SendEmailAsync(msg2);
                 return RedirectToAction(nameof(Alle));
             }
             
@@ -268,11 +287,7 @@ namespace MorFriesland.Controllers
             {
                 return NotFound();
             }
-
-            var meldingen = from a in _context.Melding
-                            where a.Id == id
-                            select a;
-
+            
             if (ModelState.IsValid)
             {
                 try
