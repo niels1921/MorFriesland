@@ -29,14 +29,14 @@ namespace MorFriesland
                 SeedAdminAccount.Initialise(userManager, roleManager).Wait();
             }
             host.Run();
-            Execute().Wait();
+            //Execute().Wait();
 
             //BuildWebHost(args).Run();
         }
 
         static async Task Execute()
         {
-            var apiKey = Environment.GetEnvironmentVariable("SENDGRID_KEY");
+            var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
             var client = new SendGridClient(apiKey);
             var from = new EmailAddress("boge1300@student.nhl.nl", "Example User");
             var subject = "Sending with SendGrid is Fun";
