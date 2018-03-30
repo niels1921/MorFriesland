@@ -7,7 +7,8 @@
 
     <environment include="Development">
 
-
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -44,17 +45,16 @@
 <body>
     <div id="wrapper">
 
-        <nav class="navbar navbar-inverse navbar">
+        <nav class="navbar navbar-inverse navbar navbar-static-top">
 
             <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
-
                     </button>
+
                     <a asp-area="" asp-controller="Melding" asp-action="Index" class="navbar-brand"><img class="logo" src="~/images/logo provincie fryslan.png"></a>
                 </div>
                 <div class="navbar-collapse collapse">

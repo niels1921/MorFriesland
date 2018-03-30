@@ -1,19 +1,7 @@
 ﻿@model MorFriesland.Models.Melding
 
-@{
-
-}
-
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Details</title>
-</head>
-<body>
-
-    <div>
+<div class="row">
+    <div class="col-md-5">
         <h4>Melding</h4>
         <hr />
         <dl class="dl-horizontal">
@@ -33,13 +21,13 @@
                 @Html.DisplayNameFor(model => model.Foto)
             </dt>
             @if (Model.Foto != null)
+        {
+            <dd>
+                @Html.DisplayFor(model => model.Foto)
+            </dd>
+    }
+    else
     {
-        <dd>
-            @Html.DisplayFor(model => model.Foto)
-        </dd>
-}
-else
-{
         <dd>
             Geen foto
         </dd>
@@ -48,13 +36,13 @@ else
                 @Html.DisplayNameFor(model => model.Email)
             </dt>
             @if (Model.Email != null)
+        {
+            <dd>
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+    }
+    else
     {
-        <dd>
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-}
-else
-{
         <dd>
             Wil niet op de hoogte gehouden worden
         </dd>
@@ -64,13 +52,13 @@ else
                 @Html.DisplayNameFor(model => model.Opgelosttijd)
             </dt>
             @if (Model.Opgelosttijd != null)
+        {
+            <dd>
+                @Html.DisplayFor(model => model.Opgelosttijd)
+            </dd>
+    }
+    else
     {
-        <dd>
-            @Html.DisplayFor(model => model.Opgelosttijd)
-        </dd>
-}
-else
-{
         <dd>
             Nog niet opgelost
         </dd>
@@ -80,38 +68,44 @@ else
                 @Html.DisplayNameFor(model => model.Gearchiveerd)
             </dt>
             @if (Model.Gearchiveerd == false)
+        {
+            <dd>
+                Nog niet gearchiveerd
+            </dd>
+    }
+    else
     {
-        <dd>
-            Nog niet gearchiveerd
-        </dd>
-}
-else
-{
         <dd>
             Gearchiveerd
         </dd>
 }
 
             @if (Model.Melder == null)
-    {
-        <dt>
-            @Html.DisplayNameFor(model => model.Melder)
-        </dt>
-        <dd>
-            Anoniem
-        </dd>
-}
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.Melder)
+            </dt>
+            <dd>
+                Anoniem
+            </dd>
+    }
         </dl>
-    </div>
-    <div class="form-group">
 
+        <div class="form-group">
+            <input type="submit" id="Opgelost" class="btn btn-success Opgelostbutton" value="Opgelost" />
+            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.Id">Verwijderen</a>
+
+        </div>
     </div>
-    <div class="form-group">
-        <input type="submit" id="Opgelost" class="btn btn-default Opgelostbutton" value="Opgelost" />
-    </div>
-    <div>
-        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-        <a asp-action="Index">Back to List</a>
-    </div>
-</body>
-</html>
+
+
+<div class="col-md-7">
+
+    <div class="nieuwemap" id="map"></div>
+
+    <script src="~/js/beheer.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCK3VEpVPHSGvBnYuGfLUYYtj1MnJ4rPWg&libraries=places&callback=initMap" async defer></script>
+</div>
+
+<div id="meldingen" style="display: none;" data-lat="@Model.Lat" data-lng="@Model.Long" data-name="@Model.Naam" data-img="/uploads/@Model.Naam/@Model.Foto" data-beschrijving="@Model.Beschrijving"></div>
+</div>
