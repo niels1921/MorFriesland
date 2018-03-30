@@ -117,7 +117,7 @@ namespace MorFriesland.Controllers
             if (id != melding.Id)
             {
                 return NotFound();
-            }
+            }         
 
             if (ModelState.IsValid)
             {
