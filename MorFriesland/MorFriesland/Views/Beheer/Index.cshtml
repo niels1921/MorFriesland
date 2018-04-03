@@ -11,17 +11,29 @@
     <meta name="viewport" content="width=device-width" />
     <title>Index</title>
 </head>
+<p>
+
+    <a class="btn btn-default meldingbutton" asp-action="Redirect">Bronhouders</a>
+</p>
+
 <body>
     <div class="row search">
 
         <div class="col-lg-6">
             <form asp-controller="Beheer" asp-action="Index" method="get" id="SearchString">
+                <label><input type="checkbox" name="gearchiveerd" value="true" id="checkboxfilter" /> Alle meldingen</label>
+
                 <div class="input-group">
-          
-                    <select name="SearchString" class="form-control" asp-items="ViewBag.Categorie_Id"></select>
+
+                    <select name="SearchString" class="form-control" asp-items="ViewBag.Categorie_Id">
+                        <option value="">Alle meldingen</option>
+                    </select>
+
 
 
                     <span class="input-group-btn">
+
+
                         <button class="btn btn-default" type="submit">Filter</button>
                     </span>
                 </div><!-- /input-group -->
@@ -29,56 +41,56 @@
 
         </div><!-- /.col-lg-6 -->
     </div>
-<div class="row">
-    <div class="col-md-5">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Categorie)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Beschrijving)
-                    </th>
+    <div class="row">
+        <div class="col-md-5">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Categorie)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Beschrijving)
+                        </th>
 
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-    {
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
 
-                <tr>
+                        <tr>
 
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Categorie.Naam)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Beschrijving)
-                    </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Categorie.Naam)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Beschrijving)
+                            </td>
 
-                    <td>
-                        <a asp-action="Details" asp-route-id="@item.Id">Beheer</a>
-                    </td>
-                </tr>
-            <div id="meldingen" style="display: none;" data-lat="@item.Lat" data-lng="@item.Long" data-name="@item.Naam" data-img="/uploads/@item.Naam/@item.Foto" data-beschrijving="@item.Beschrijving"></div>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.Id">Beheer</a>
+                            </td>
+                        </tr>
+                        <div id="meldingen" style="display: none;" data-lat="@item.Lat" data-lng="@item.Long" data-name="@item.Naam" data-img="/uploads/@item.Naam/@item.Foto" data-beschrijving="@item.Beschrijving"></div>
 
-}
-            </tbody>
-        </table>
-    </div>
-    <div class="col-md-7">
-        <input id="pac-input" class="controls" type="text"
-               placeholder="Zoek een locatie">
-        <div class="nieuwemap" id="map"></div>
-        <div id="infowindow-content">
-            <span id="place-name" class="title"></span><br>
-
-            <span id="place-address"></span>
+                    }
+                </tbody>
+            </table>
         </div>
-        <script src="~/js/allemeldingen.js"></script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCK3VEpVPHSGvBnYuGfLUYYtj1MnJ4rPWg&libraries=places&callback=initMap" async defer></script>
+        <div class="col-md-7">
+            <input id="pac-input" class="controls" type="text"
+                   placeholder="Zoek een locatie">
+            <div class="nieuwemap" id="map"></div>
+            <div id="infowindow-content">
+                <span id="place-name" class="title"></span><br>
+
+                <span id="place-address"></span>
+            </div>
+            <script src="~/js/allemeldingen.js"></script>
+            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCK3VEpVPHSGvBnYuGfLUYYtj1MnJ4rPWg&libraries=places&callback=initMap" async defer></script>
+        </div>
     </div>
-</div>
 </body>
 </html>

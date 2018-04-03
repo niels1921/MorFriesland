@@ -27,21 +27,45 @@ namespace MorFriesland.Controllers
         }
 
         // GET: Beheer
-        public async Task<IActionResult> Index(string SearchString)
+        public async Task<IActionResult> Index(string SearchString, bool gearchiveerd)
         {
+
+            DateTime nu = DateTime.Now;
+            nu = nu.AddDays(-1);
 
             ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Naam", "Naam");
             //var applicationDbContext = _context.Melding.Include(m => m.Categorie).Include(m => m.Melder);
-            var meldingen = from k in _context.Melding
-                            select k;
 
-            if (!String.IsNullOrEmpty(SearchString))
-            {
-                meldingen = meldingen.Where(s => s.Naam.Contains(SearchString));
+            var applicationDbContext = _context.Melding.Include(m => m.Categorie).Include(m => m.Melder);
+
+            var meldingen = from x in applicationDbContext
+                            where x.Opgelosttijd > nu || x.Opgelosttijd == null
+                            select x;
+
+
+                if ((gearchiveerd == true) && (!String.IsNullOrWhiteSpace(SearchString)))
+                {
+                    meldingen = from x in applicationDbContext
+                                select x;
+
+                    meldingen = meldingen.Where(s => s.Naam.Contains(SearchString));
+                }
+                else if (!String.IsNullOrWhiteSpace(SearchString))
+                {
+                    meldingen = meldingen.Where(s => s.Naam.Contains(SearchString));
+                } else if (gearchiveerd == true)
+                {
+                    meldingen = from x in applicationDbContext
+                            select x;
+
             }
 
-
+         
             
+
+
+
+
             return View(await meldingen.ToListAsync());
         }
 
@@ -146,6 +170,45 @@ namespace MorFriesland.Controllers
             return View(melding);
         }
 
+
+        // POST: Beheer/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Oplossen(int id, [Bind("Id,Categorie_Id,Beschrijving,Foto,Email,Long,Lat,Opgelosttijd,Gearchiveerd,User_id,Gemeente,Naam")] Melding melding)
+        {
+            if (id != melding.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                melding.Opgelosttijd = DateTime.Now;
+                try
+                {
+                    _context.Update(melding);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!MeldingExists(melding.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(melding);
+        }
+
+
         // GET: Beheer/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -177,41 +240,19 @@ namespace MorFriesland.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Beheer/Delete/5
-        public async Task<IActionResult> Update(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var melding = await _context.Melding
-                .Include(m => m.Categorie)
-                .Include(m => m.Melder)
-                .SingleOrDefaultAsync(m => m.Id == id);
-            if (melding == null)
-            {
-                return NotFound();
-            }
-
-            return View(melding);
-        }
-
-        // POST: Beheer/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Update(int id)
-        {
-            var melding = await _context.Melding.SingleOrDefaultAsync(m => m.Id == id);
-            melding.Opgelosttijd = DateTime.Now;
-            //_context.Melding.Update(melding = DateTime.Now);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
 
         private bool MeldingExists(int id)
         {
             return _context.Melding.Any(e => e.Id == id);
         }
+
+        
+        public ActionResult Redirect()
+        {
+            return RedirectToAction(nameof(BronhouderController.Index), "Bronhouder");
+
+        }
+
     }
 }

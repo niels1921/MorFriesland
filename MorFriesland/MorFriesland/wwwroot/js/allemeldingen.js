@@ -39,12 +39,27 @@ function initMap() {
         var Beschrijving = $(this).data('beschrijving');
         var Img = $(this).data('img');
 
+        var id = $(this).data('id');
+        var url = "https://morfriesland20180329110629.azurewebsites.net/beheer/details/" + id;
+
         var content = "";
-        if (Img !== "/uploads/" + Name + "/") {
-            content = "<div class='col-md-12 nopadding'><div class='col-md-4 nopadding'><img style='max-width: 100%;' src='" + Img + "'></div><div class='col-md-8 infobeschrijving'><b>" + Name + "</b><br/>" + Beschrijving + "</div></div>";
+
+        if (id !== null) {
+            if (Img !== "/uploads/" + Name + "/") {
+                content = "<div class='col-md-12 nopadding'><div class='col-md-4 nopadding'><img style='max-width: 100%;' src='" + Img + "'></div><div class='col-md-8 infobeschrijving'><b>" + Name + "</b><br/>" + Beschrijving + "<br/> <a href='" + url + "'>Bekijk melding</a> </div></div>";
+            } else {
+                content = "<div class='col-md-12 nopadding'><b>" + Name + "</b><br/>" + Beschrijving + "<br/> <a href='" + url + "'>Bekijk melding</a> </div>";
+            }
         } else {
-            content = "<div class='col-md-12 nopadding'><b>" + Name + "</b><br/>" + Beschrijving + "</div>";
+            content = "";
+            if (Img !== "/uploads/" + Name + "/") {
+                content = "<div class='col-md-12 nopadding'><div class='col-md-4 nopadding'><img style='max-width: 100%;' src='" + Img + "'></div><div class='col-md-8 infobeschrijving'><b>" + Name + "</b><br/>" + Beschrijving + "</div></div>";
+            } else {
+                content = "<div class='col-md-12 nopadding'><b>" + Name + "</b><br/>" + Beschrijving + "</div>";
+            }
         }
+
+
 
 
 
