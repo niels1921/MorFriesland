@@ -18,7 +18,8 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+        @foreach (var item in Model)
+    {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Naam)
@@ -26,10 +27,23 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Beschrijving)
             </td>
+            @if (item.Opgelosttijd != null)
+        {
             <td>
                 @Html.DisplayFor(modelItem => item.Opgelosttijd)
             </td>
+
+    }
+    else
+    {
+
+        <td>
+            nog niet opgelost
+
+        </td>
+}
         </tr>
+
 }
     </tbody>
-</table>
+        </table>
