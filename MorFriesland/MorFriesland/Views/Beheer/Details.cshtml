@@ -22,9 +22,8 @@
             </dt>
             @if (Model.Foto != null)
         {
-            <dd>
-                <img src="@Model.Foto" style="max-width:100px; max-height:100px"/> 
-                @*@Html.DisplayFor(model => model.Foto)*@
+            <dd>                
+                @Html.DisplayFor(model => model.Foto)
             </dd>
     }
     else
