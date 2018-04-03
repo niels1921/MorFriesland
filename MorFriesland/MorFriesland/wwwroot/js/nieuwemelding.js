@@ -82,12 +82,9 @@ $("#meldingsubmit").click(function () {
 
 $("#submit").submit(function (e) {
 
-
     form = this;
 
     event.preventDefault();
-
-   
 
     var gemeentenaam = "";
 
