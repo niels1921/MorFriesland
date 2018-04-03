@@ -232,7 +232,7 @@ namespace MorFriesland.Controllers
                 var plainTextContent2 = "koptext?";
                 //pas de localhost aan naar je eigenport om het te laten werken
                 var htmlContent2 = "Mail van de melding " + melding.Naam + "<br> Beschrijving: <br> " + beschrijving + "<br>" +
-                    " <a href=https://Localhost:44334/beheer/Details/" + melding.Id + "> Beheer pagina</a>";
+                    " <a href=https://morfriesland20180329110629.azurewebsites.net/beheer/Details/" + melding.Id + "> Beheer pagina</a>";
                 var msg2 = MailHelper.CreateSingleEmail(from2, to2, subject2, plainTextContent2, htmlContent2);
                 var response2 = client2.SendEmailAsync(msg2);
                 return RedirectToAction(nameof(Alle));
