@@ -73,10 +73,18 @@ namespace MorFriesland.Controllers
 
         // GET: Melding
         public async Task<IActionResult> Alle()
-        {          
+        {
+            DateTime nu = DateTime.Now;
+            nu = nu.AddDays(-1);
+
+
             var applicationDbContext = _context.Melding.Include(m => m.Categorie).Include(m => m.Melder);
-           
-            return View(await applicationDbContext.ToListAsync());
+
+            var meldingen = from x in applicationDbContext
+                            where x.Opgelosttijd > nu || x.Opgelosttijd == null
+                            select x;
+
+            return View(await meldingen.ToListAsync());
         }
 
         // GET: Melding/Details/5
