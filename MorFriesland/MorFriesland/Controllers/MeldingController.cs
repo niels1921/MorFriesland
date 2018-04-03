@@ -148,7 +148,7 @@ namespace MorFriesland.Controllers
                                      select bron;
 
 
-            string bronhoudermail = "";
+            string bronhoudermail = null;
             if (bronhouder == null)
             {
                 bronhoudermail = "nieu1702@student.nhl.nl";   
@@ -229,13 +229,13 @@ namespace MorFriesland.Controllers
                     var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
                     var response = await client.SendEmailAsync(msg);
                 }
-                if(bronhouder != null)
+                if (bronhouder != null)
                 {
                     foreach (Bronhouder item in bronhouder)
                     {
                         //_context.Add(melding);
                         //await _context.SaveChangesAsync();
-                        var apiKey2 = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
+                        var apiKey2 = Environment.GetEnvironmentVariable("SENDGRID_KEY");
                         var client2 = new SendGridClient(apiKey2);
                         var from2 = new EmailAddress("boge1300@student.nhl.nl", "MOR Friesland");
                         var subject2 = "Melding" + melding.Naam;
@@ -249,11 +249,11 @@ namespace MorFriesland.Controllers
                         return RedirectToAction(nameof(Alle));
                     }
                 }
-                
-                else{
-                    _context.Add(melding);
-                    await _context.SaveChangesAsync();
-                    var apiKey2 = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
+                else
+                {
+                    //_context.Add(melding);
+                    //await _context.SaveChangesAsync();
+                    var apiKey2 = Environment.GetEnvironmentVariable("SENDGRID_KEY");
                     var client2 = new SendGridClient(apiKey2);
                     var from2 = new EmailAddress("boge1300@student.nhl.nl", "MOR Friesland");
                     var subject2 = "Melding" + melding.Naam;
@@ -265,11 +265,10 @@ namespace MorFriesland.Controllers
                     var msg2 = MailHelper.CreateSingleEmail(from2, to2, subject2, plainTextContent2, htmlContent2);
                     var response2 = client2.SendEmailAsync(msg2);
                     return RedirectToAction(nameof(Alle));
-                
+                }
             }
-                
-            }
-            
+            _context.Add(melding);
+            await _context.SaveChangesAsync();
             ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Id", "Naam", melding.Categorie_Id);
             ViewData["User_id"] = new SelectList(_context.Users, "Id", "Id", melding.User_id);
             return View(melding);
