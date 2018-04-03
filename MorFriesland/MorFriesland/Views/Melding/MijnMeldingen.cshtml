@@ -25,20 +25,33 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Naam)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Beschrijving)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Foto)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Opgelosttijd)
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Naam)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Beschrijving)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Foto)
+            </td>
+            @if (item.Opgelosttijd != null)
+    {
+        <td>
+            @Html.DisplayFor(modelItem => item.Opgelosttijd)
+        </td>
+
+            }
+            else { 
+
+        <td>
+            nog niet opgelost
+
+        </td>
+
+            }
+
+        </tr>
         }
     </tbody>
 </table>

@@ -155,22 +155,15 @@ namespace MorFriesland.Controllers
             {
                 bronhoudermail = defaultmail;
             }
-            else
+            else if (bronhouder.Count() == 1)
             {
                 Bronhouder Brn = (from bron in _context.Bronhouder
-                                        where bron.Gemeente == melding.Gemeente
-                                        select bron).SingleOrDefault();
-
-                if(Brn == null)
-                {
-                    bronhoudermail = defaultmail;
-
-                }
-                else
-                {
-                    bronhoudermail = Brn.Email;
-
-                }
+                                  where bron.Gemeente == melding.Gemeente
+                                  select bron).SingleOrDefault();
+            }
+            else
+            {
+                bronhoudermail = defaultmail;
 
             }
 

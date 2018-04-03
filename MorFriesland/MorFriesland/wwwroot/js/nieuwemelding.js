@@ -13,27 +13,32 @@ getLocation();
 function getLocation() {
 
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(SetPosistion);
-    } 
+        navigator.geolocation.getCurrentPosition(SetPosistion);       
+    }
+    else {
+        initNavigator();
+    }
 }
 
-navigator.permissions.query({ name: 'geolocation' })
-    .then(function (permissionStatus) {
-        if (permissionStatus.state === "denied") {
-            defaultMap();
-        } else if (permissionStatus.state === "prompt") {
-            defaultMap();
-        }
-
-
-        permissionStatus.onchange = function () {
-            if (this.state === "denied")
-            {
+function initNavigator() {
+    navigator.permissions.query({ name: 'geolocation' })
+        .then(function (permissionStatus) {
+            if (permissionStatus.state === "denied") {
+                defaultMap();
+            } else if (permissionStatus.state === "prompt") {
                 defaultMap();
             }
-            //console.log('geolocation permission state has changed to ', this.state);
-        };
-    });
+
+
+            permissionStatus.onchange = function () {
+                if (this.state === "denied") {
+                    defaultMap();
+                }
+                //console.log('geolocation permission state has changed to ', this.state);
+            };
+        });
+}
+
 
 
 
@@ -73,45 +78,42 @@ function Ondrag(event) {
 
 
 }
-$("#meldingsubmit").click(function () {
 
-    $(".loader").show();
+$(document).ready(function () {
+    $("body").on("click", "#meldingsubmit", function () {
 
-});
+        $(".loader").show();
 
+        console.log("iets hier");
+        form = $("#submit");
 
-$("#submit").submit(function (e) {
+        console.log("iets hier2");
 
-    form = this;
+        var gemeentenaam = "";
 
-    event.preventDefault();
+        $.getJSON(url, function (result) {
+            $.each(result, function (i, field) {
+                console.log(result);
+                console.log(field.docs[0]);
+                gemeentenaam = field.docs[0].gemeentenaam;
 
-    var gemeentenaam = "";
+                $("#gemeente").val(gemeentenaam);
+                console.log(field);
+                if (field.docs[0].provincienaam !== "Friesland") {
+                    alert("U kunt helaas geen melding doen buiten Friesland");
+                    $(".loader").hide();
+                    console.log("iets hier34");
 
-    $.getJSON(url, function (result) {
-        $.each(result, function (i, field) {
-            console.log(field.docs[0]);
-            gemeentenaam = field.docs[0].gemeentenaam;
+                } else {
+                    console.log("iets hier343454");
+                    form.submit();
+                }
+            })
+        });
 
-            $("#gemeente").val(gemeentenaam);
-
-            if (field.docs[0].provincienaam !== "Friesland") {
-                alert("U kunt helaas geen melding doen buiten Friesland");
-                $(".loader").hide();
-
-            } else {
-                form.submit();
-            }
-
-            
-
-
-        })
     });
-    
+
 });
-
-
 
 
 function SetPosistion(position) {
