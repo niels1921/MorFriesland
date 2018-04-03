@@ -6,9 +6,20 @@ defaultMap();
 
 //Laad de map in
 function initMap() {
-    var fryslan = { lat: 53.1641642, lng: 5.7817542 };
+    var fryslan = "";
+
+    $('#meldingen[data-lat]').each(function () {
+
+        var latdata = $(this).data('lat');
+        var lngdata = $(this).data('lng');
+
+        fryslan = { lat: latdata, lng: lngdata };
+
+    });
+    
+
     var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 10,
+        zoom: 18,
         center: fryslan
     });
     var icon = {
@@ -45,6 +56,8 @@ function initMap() {
         } else {
             content = "<div class='col-md-12 nopadding'><b>" + Name + "</b><br/>" + Beschrijving + "</div>";
         }
+
+
 
 
 
