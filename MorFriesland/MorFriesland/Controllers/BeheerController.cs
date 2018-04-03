@@ -160,7 +160,7 @@ namespace MorFriesland.Controllers
             {
                 return NotFound();
             }
-
+            
             return View(melding);
         }
 
@@ -171,6 +171,38 @@ namespace MorFriesland.Controllers
         {
             var melding = await _context.Melding.SingleOrDefaultAsync(m => m.Id == id);
             _context.Melding.Remove(melding);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Beheer/Delete/5
+        public async Task<IActionResult> Update(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var melding = await _context.Melding
+                .Include(m => m.Categorie)
+                .Include(m => m.Melder)
+                .SingleOrDefaultAsync(m => m.Id == id);
+            if (melding == null)
+            {
+                return NotFound();
+            }
+
+            return View(melding);
+        }
+
+        // POST: Beheer/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(int id)
+        {
+            var melding = await _context.Melding.SingleOrDefaultAsync(m => m.Id == id);
+            melding.Opgelosttijd = DateTime.Now;
+            //_context.Melding.Update(melding = DateTime.Now);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
