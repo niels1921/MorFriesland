@@ -13,7 +13,7 @@
                 @Html.DisplayNameFor(model => model.Beschrijving)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Opgelosttijd)
+                <a asp-action="mijnmeldingen" asp-route-sortOrder="@ViewData["DateSortParm"]">@Html.DisplayNameFor(model => model.Opgelosttijd)</a>
             </th>
         </tr>
     </thead>
