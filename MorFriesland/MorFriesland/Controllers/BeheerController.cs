@@ -246,5 +246,13 @@ namespace MorFriesland.Controllers
         {
             return _context.Melding.Any(e => e.Id == id);
         }
+
+        
+        public ActionResult Redirect()
+        {
+            return RedirectToAction(nameof(BronhouderController.Index), "Bronhouder");
+
+        }
+
     }
 }
