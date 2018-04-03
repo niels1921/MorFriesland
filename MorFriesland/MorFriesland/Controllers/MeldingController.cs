@@ -73,10 +73,18 @@ namespace MorFriesland.Controllers
 
         // GET: Melding
         public async Task<IActionResult> Alle()
-        {          
+        {
+            DateTime nu = DateTime.Now;
+            nu = nu.AddDays(-1);
+
+
             var applicationDbContext = _context.Melding.Include(m => m.Categorie).Include(m => m.Melder);
-           
-            return View(await applicationDbContext.ToListAsync());
+
+            var meldingen = from x in applicationDbContext
+                            where x.Opgelosttijd > nu || x.Opgelosttijd == null
+                            select x;
+
+            return View(await meldingen.ToListAsync());
         }
 
         // GET: Melding/Details/5
@@ -135,14 +143,13 @@ namespace MorFriesland.Controllers
                            where cat.Id == melding.Categorie_Id
                            select cat).SingleOrDefault();
 
-            Bronhouder bronhouder = (from bron in _context.Bronhouder
+            var bronhouder = from bron in _context.Bronhouder
                                      where bron.Gemeente == melding.Gemeente
-                                     select bron).SingleOrDefault();
+                                     select bron;
+
+
             string bronhoudermail = "";
-            if (bronhouder != null)
-            {
-                bronhoudermail = bronhouder.Email;
-            } else
+            if (bronhouder == null)
             {
                 bronhoudermail = "nieu1702@student.nhl.nl";   
             }
@@ -216,26 +223,51 @@ namespace MorFriesland.Controllers
                     var client = new SendGridClient(apiKey);
                     var from = new EmailAddress("boge1300@student.nhl.nl", "MOR Friesland");
                     var subject = "Melding" + melding.Naam;
-                    var to = new EmailAddress("harm.vandenbogert@outlook.com");
+                    var to = new EmailAddress(mail);
                     var plainTextContent = "koptext?";
                     var htmlContent = "Mail van de melding <br> Beschrijving: " + beschrijving + Environment.NewLine;
                     var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
                     var response = await client.SendEmailAsync(msg);
                 }
-                _context.Add(melding);
-                await _context.SaveChangesAsync();
-                var apiKey2 = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
-                var client2 = new SendGridClient(apiKey2);
-                var from2 = new EmailAddress("boge1300@student.nhl.nl", "MOR Friesland");
-                var subject2 = "Melding" + melding.Naam;
-                var to2 = new EmailAddress("harm.vandenbogert@outlook.com");
-                var plainTextContent2 = "koptext?";
-                //pas de localhost aan naar je eigenport om het te laten werken
-                var htmlContent2 = "Mail van de melding " + melding.Naam + "<br> Beschrijving: <br> " + beschrijving + "<br>" +
-                    " <a href=https://morfriesland20180329110629.azurewebsites.net/beheer/Details/" + melding.Id + "> Beheer pagina</a>";
-                var msg2 = MailHelper.CreateSingleEmail(from2, to2, subject2, plainTextContent2, htmlContent2);
-                var response2 = client2.SendEmailAsync(msg2);
-                return RedirectToAction(nameof(Alle));
+                if(bronhouder != null)
+                {
+                    foreach (Bronhouder item in bronhouder)
+                    {
+                        //_context.Add(melding);
+                        //await _context.SaveChangesAsync();
+                        var apiKey2 = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
+                        var client2 = new SendGridClient(apiKey2);
+                        var from2 = new EmailAddress("boge1300@student.nhl.nl", "MOR Friesland");
+                        var subject2 = "Melding" + melding.Naam;
+                        var to2 = new EmailAddress(item.Email);
+                        var plainTextContent2 = "koptext?";
+                        //pas de localhost aan naar je eigenport om het te laten werken
+                        var htmlContent2 = "Mail van de melding " + melding.Naam + "<br> Beschrijving: <br> " + beschrijving + "<br>" +
+                            " <a href=https://morfriesland20180329110629.azurewebsites.net/beheer/Details/" + melding.Id + "> Beheer pagina</a>";
+                        var msg2 = MailHelper.CreateSingleEmail(from2, to2, subject2, plainTextContent2, htmlContent2);
+                        var response2 = client2.SendEmailAsync(msg2);
+                        return RedirectToAction(nameof(Alle));
+                    }
+                }
+                
+                else{
+                    _context.Add(melding);
+                    await _context.SaveChangesAsync();
+                    var apiKey2 = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
+                    var client2 = new SendGridClient(apiKey2);
+                    var from2 = new EmailAddress("boge1300@student.nhl.nl", "MOR Friesland");
+                    var subject2 = "Melding" + melding.Naam;
+                    var to2 = new EmailAddress(bronhoudermail);
+                    var plainTextContent2 = "koptext?";
+                    //pas de localhost aan naar je eigenport om het te laten werken
+                    var htmlContent2 = "Mail van de melding " + melding.Naam + "<br> Beschrijving: <br> " + beschrijving + "<br>" +
+                        " <a href=https://morfriesland20180329110629.azurewebsites.net/beheer/Details/" + melding.Id + "> Beheer pagina</a>";
+                    var msg2 = MailHelper.CreateSingleEmail(from2, to2, subject2, plainTextContent2, htmlContent2);
+                    var response2 = client2.SendEmailAsync(msg2);
+                    return RedirectToAction(nameof(Alle));
+                
+            }
+                
             }
             
             ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Id", "Naam", melding.Categorie_Id);
