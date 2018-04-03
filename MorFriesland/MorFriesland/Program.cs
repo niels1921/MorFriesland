@@ -36,11 +36,11 @@ namespace MorFriesland
 
         static async Task Execute()
         {
-            var apiKey = Environment.GetEnvironmentVariable("SENDGRID_KEY", EnvironmentVariableTarget.User);
+            var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
             var client = new SendGridClient(apiKey);
-            var from = new EmailAddress("klaas.vanderwerk@gmail.com", "Example User");
+            var from = new EmailAddress("boge1300@student.nhl.nl", "Example User");
             var subject = "Sending with SendGrid is Fun";
-            var to = new EmailAddress("klaas.vanderwerk@gmail.com", "Example User");
+            var to = new EmailAddress("harm.vandenbogert@outlook.com", "Example User");
             var plainTextContent = "and easy to do anywhere, even with C#";
             var htmlContent = "<strong>and easy to do anywhere, even with C#</strong>";
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);

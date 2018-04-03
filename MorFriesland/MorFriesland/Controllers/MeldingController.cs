@@ -124,6 +124,8 @@ namespace MorFriesland.Controllers
         public async Task<IActionResult> Index([Bind("Id,Categorie_Id,Beschrijving,Foto,Email,Long,Lat,Gearchiveerd,User_id,Gemeente")] Melding melding, IFormFile Image)
         {
             string userId = this.User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
+            //var apiKey = System.Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
+            //var client = new SendGridClient(apiKey);
 
             ApplicationUser user = (from x in _context.Users
                             where x.Id == userId
@@ -202,17 +204,19 @@ namespace MorFriesland.Controllers
                 }
                 melding.Opgelosttijd = null;
 
+                beschrijving = melding.Beschrijving;
+
 
                 if (melding.Email != null)
                 {
                     string mail = melding.Email;
-                    beschrijving = melding.Beschrijving;
 
-                    var apiKey = Environment.GetEnvironmentVariable("SENDGRID_KEY", EnvironmentVariableTarget.User);
+                    //var apiKey = Environment.GetEnvironmentVariable("SENDGRID_KEY", EnvironmentVariableTarget.User);
+                    var apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
                     var client = new SendGridClient(apiKey);
-                    var from = new EmailAddress("klaas.vanderwerk@gmail.com", "MOR Friesland");
+                    var from = new EmailAddress("boge1300@student.nhl.nl", "MOR Friesland");
                     var subject = "Melding" + melding.Naam;
-                    var to = new EmailAddress(mail);
+                    var to = new EmailAddress("harm.vandenbogert@outlook.com");
                     var plainTextContent = "koptext?";
                     var htmlContent = "Mail van de melding <br> Beschrijving: " + beschrijving + Environment.NewLine;
                     var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
@@ -220,11 +224,11 @@ namespace MorFriesland.Controllers
                 }
                 _context.Add(melding);
                 await _context.SaveChangesAsync();
-                var apiKey2 = Environment.GetEnvironmentVariable("SENDGRID_KEY", EnvironmentVariableTarget.User);
+                var apiKey2 = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
                 var client2 = new SendGridClient(apiKey2);
-                var from2 = new EmailAddress("klaas.vanderwerk@gmail.com", "MOR Friesland");
+                var from2 = new EmailAddress("boge1300@student.nhl.nl", "MOR Friesland");
                 var subject2 = "Melding" + melding.Naam;
-                var to2 = new EmailAddress(bronhoudermail);
+                var to2 = new EmailAddress("harm.vandenbogert@outlook.com");
                 var plainTextContent2 = "koptext?";
                 //pas de localhost aan naar je eigenport om het te laten werken
                 var htmlContent2 = "Mail van de melding " + melding.Naam + "<br> Beschrijving: <br> " + beschrijving + "<br>" +
@@ -268,7 +272,7 @@ namespace MorFriesland.Controllers
             {
                 return NotFound();
             }
-
+            
             if (ModelState.IsValid)
             {
                 try

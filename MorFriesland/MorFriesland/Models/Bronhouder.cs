@@ -9,8 +9,6 @@ namespace MorFriesland.Models
     public class Bronhouder
     {
         public int Id { get; set; }
-        [Display(Name = "Gemeente code")]
-
         public string Gemeente { get; set; }
         public string Email { get; set; }
     }

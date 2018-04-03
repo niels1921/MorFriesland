@@ -5,6 +5,10 @@
     <UserSecretsId>aspnet-MorFriesland-92CE4F43-4F50-4491-B72A-75784F771B23</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Properties\PublishProfiles\MorFriesland20180329084828 - Web Deploy.pubxml" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Mailkit" Version="2.0.2" />
@@ -23,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="wwwroot\uploads\" />
     <Folder Include="wwwroot\uploads\Lantaarnpaal Kapot\" />
   </ItemGroup>
