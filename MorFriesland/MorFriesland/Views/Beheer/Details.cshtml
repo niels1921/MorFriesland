@@ -93,9 +93,25 @@
         </dl>
 
         <div class="form-group">
-            
-            <a class="btn btn-success" asp-action="Update" asp-route-id="@Model.Id">Opgelost</a>
-            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.Id">Verwijderen</a>
+
+            <form asp-action="Oplossen">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="Categorie">
+                <input type="hidden" asp-for="Beschrijving">
+                <input type="hidden" asp-for="Naam">
+                <input type="hidden" asp-for="Categorie_Id">
+                <input type="hidden" asp-for="Email">
+                <input type="hidden" asp-for="User_id">
+                <input type="hidden" asp-for="Foto">
+                <input type="hidden" asp-for="Gemeente">
+                <input type="hidden" asp-for="Gearchiveerd">
+                <input type="hidden" asp-for="Lat">
+                <input type="hidden" asp-for="Long">
+
+                <input type="submit" value="Oplossen" class="btn btn-success" />
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.Id">Verwijderen</a>
+
+            </form>
 
         </div>
     </div>
