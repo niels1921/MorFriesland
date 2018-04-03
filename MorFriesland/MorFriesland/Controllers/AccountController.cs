@@ -69,7 +69,7 @@ namespace MorFriesland.Controllers
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToLocal("/Melding/Alle");
                 }
                 if (result.RequiresTwoFactor)
                 {
@@ -241,7 +241,7 @@ namespace MorFriesland.Controllers
 
                     //await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation("User created a new account with password.");
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToLocal("/Melding/Alle");
                 }
                 AddErrors(result);
             }
@@ -256,7 +256,7 @@ namespace MorFriesland.Controllers
         {
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
-            return RedirectToAction(nameof(MeldingController.Index), "Home");
+            return RedirectToAction(nameof(MeldingController.Index), "/Melding/Alle");
         }
 
         [HttpPost]
