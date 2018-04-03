@@ -150,9 +150,10 @@ namespace MorFriesland.Controllers
              
 
             string bronhoudermail = "";
+            string defaultmail = "nieu1702@student.nhl.nl";
             if (bronhouder == null)
             {
-                bronhoudermail = "nieu1702@student.nhl.nl";   
+                bronhoudermail = defaultmail;
             }
             else
             {
@@ -160,7 +161,17 @@ namespace MorFriesland.Controllers
                                         where bron.Gemeente == melding.Gemeente
                                         select bron).SingleOrDefault();
 
-                bronhoudermail = Brn.Email;
+                if(Brn == null)
+                {
+                    bronhoudermail = defaultmail;
+
+                }
+                else
+                {
+                    bronhoudermail = Brn.Email;
+
+                }
+
             }
 
             string naam = melding.Naam;
