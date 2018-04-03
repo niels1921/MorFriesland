@@ -23,7 +23,9 @@
             @if (Model.Foto != null)
         {
             <dd>
-                @Html.DisplayFor(model => model.Foto)
+                <img src=" @Html.DisplayFor(model => model.Foto)" />
+
+                 @*@Html.DisplayFor(model=> model.Foto)*@
             </dd>
     }
     else
