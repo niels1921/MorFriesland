@@ -231,6 +231,8 @@ namespace MorFriesland.Controllers
                 }
                 if(bronhouder != null)
                 {
+                    _context.Add(melding);
+
                     foreach (Bronhouder item in bronhouder)
                     {
                         //_context.Add(melding);
@@ -251,7 +253,6 @@ namespace MorFriesland.Controllers
                 }
                 
                 else{
-                    _context.Add(melding);
                     await _context.SaveChangesAsync();
                     var apiKey2 = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
                     var client2 = new SendGridClient(apiKey2);
@@ -267,9 +268,10 @@ namespace MorFriesland.Controllers
                     return RedirectToAction(nameof(Alle));
                 
             }
-                
+
             }
-            
+            _context.Add(melding);
+
             ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Id", "Naam", melding.Categorie_Id);
             ViewData["User_id"] = new SelectList(_context.Users, "Id", "Id", melding.User_id);
             return View(melding);
