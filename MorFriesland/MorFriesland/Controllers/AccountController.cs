@@ -256,7 +256,7 @@ namespace MorFriesland.Controllers
         {
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
-            return RedirectToAction(nameof(HomeController.Index), "Home");
+            return RedirectToAction(nameof(MeldingController.Index), "Home");
         }
 
         [HttpPost]
@@ -344,7 +344,7 @@ namespace MorFriesland.Controllers
         {
             if (userId == null || code == null)
             {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
+                return RedirectToAction(nameof(MeldingController.Index), "Home");
             }
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
@@ -500,7 +500,7 @@ namespace MorFriesland.Controllers
             }
             else
             {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
+                return RedirectToAction(nameof(MeldingController.Index), "Home");
             }
         }
 

@@ -13,8 +13,32 @@
     padding-right: 15px;
 }
 
+.row.search {
+    margin-bottom: 20px;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+    .btn-file input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 100px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        background: white;
+        cursor: inherit;
+        display: block;
+    }
 .content{
-    padding-bottom: 100px;
+    padding-bottom: 120px;
 }
 
 /* Carousel */
@@ -34,6 +58,7 @@
 }
 
 .nieuwemap {
+    clear: both;
     height: 500px ;
 }
 /* Always set the map height explicitly to define the size of the div
@@ -58,31 +83,17 @@
     width: 100%;
 }
 
-
     .controls:focus {
         border-color: #4d90fe;
     }
-    .btn btn-default {
-    background-color: #244994;
+
+
+.navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus {
     color: #fff;
-    border-radius: 8px;
+    background-color: #244994;
 }
 
-    .btn-default {
-    background-color: #244994;
-    color: #fff;
-    border-radius: 8px;
-}
-.navbar-inverse .navbar-link {
-    background-color: #244994;
-    color: #fff;
-    border-radius: 8px;
-    margin-right: 10px;
-    margin-top: 4px;
-    padding: 8px 25px !important;
-}
-
-    .btn.btn-default.meldingbutton {
+.btn.btn-default.meldingbutton {
     background-color: #244994;
     border-color: #244994;
     color: white;
@@ -109,33 +120,15 @@
     display: inline;
 }
 
+.logo{
+    max-width: 100%;
+}
 
 a.navbar-brand {
 
     max-width: 200px;
     padding: 0px;
     margin-right: 20px;
-}
-
-.btn-link:hover, .btn-link:focus {
-    text-decoration: none;
-}
-
-.btn-default:hover {
-    color: white;
-    background-color: #2d59b4;
-    border-color: #2d59b4;
-}
-.btn-default:active, .btn-default.active, .open > .dropdown-toggle.btn-default {
-    color: #fff;
-    background-color: #2d59b4;
-    border-color: #2d59b4;
-}
-
-.btn-default:active:hover, .btn-default.active:hover, .open > .dropdown-toggle.btn-default:hover, .btn-default:active:focus, .btn-default.active:focus, .open > .dropdown-toggle.btn-default:focus, .btn-default:active.focus, .btn-default.active.focus, .open > .dropdown-toggle.btn-default.focus {
-    color: #fff;
-    background-color: #2d59b4;
-    border-color: #2d59b4;
 }
 
 .navbar-inverse {
@@ -231,22 +224,97 @@ footer {
     margin-top: 4px;
     padding: 8px 25px !important;
 }
-
-.logo {
-    max-width: 100%;
-}
-
-.navbar-brand > img {
-    display: block;
-    padding-left: 10px;
-    padding-left: 10px;
-    max-width: 100%;
-}
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
     /* Hide captions */
     .carousel-caption {
         display: none;
     }
+
+    .navbar-inverse {
+        padding-bottom: 0px;
+        margin-bottom: 10px;
+    }
+
+    a.navbar-brand {
+        max-width: 220px;
+        padding: 15px 15px;
+    }
+
+    .controls {
+        width: 280px;
+        left: -7px !important;
+        top: 40px !important;
+    }
+
+    .content {
+        padding-bottom: 100px;
+    }
+
+    .navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
+        /* border-color: #101010; */
+        border: none;
+        background-color: #244994;
+        padding: 0px;
+    }
+
+    .navbar-nav {
+        margin: 0px;
+    }
+
+    .menubutton {
+        margin-top: 0px;
+        border-radius: 0px;
+        border-bottom: 1px solid white;
+        margin-right: 0px;
+        padding: 15px 15px !important;
+        text-align: left;
+    }
+
+    .nieuwemap {
+        height: 350px;
+        clear: both;
+    }
+
+    .newmap {
+        padding: 0px;
+        margin-top: 60px;
+    }
+
+    .navbar-toggle .icon-bar:nth-of-type(2) {
+        top: 1px;
+    }
+
+    .navbar-toggle .icon-bar:nth-of-type(3) {
+        top: 2px;
+    }
+
+    .navbar-toggle .icon-bar {
+        position: relative;
+        transition: all 250ms ease-in-out;
+    }
+
+    .navbar-toggle.active .icon-bar:nth-of-type(1) {
+        top: 6px;
+        transform: rotate(45deg);
+    }
+
+    .navbar-toggle.active .icon-bar:nth-of-type(2) {
+        background-color: transparent;
+    }
+
+    .navbar-toggle.active .icon-bar:nth-of-type(3) {
+        top: -6px;
+        transform: rotate(-45deg);
+    }
+
+    .navbar-brand{
+        height: auto !important;
+    }
+
+    .meldingtitle{
+        margin-top: 0px;
+    }
+
 }
 

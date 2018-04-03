@@ -25,23 +25,6 @@ namespace MorFriesland.Controllers
             return View(await _context.Bronhouder.ToListAsync());
         }
 
-        // GET: Bronhouder/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var bronhouder = await _context.Bronhouder
-                .SingleOrDefaultAsync(m => m.Id == id);
-            if (bronhouder == null)
-            {
-                return NotFound();
-            }
-
-            return View(bronhouder);
-        }
 
         // GET: Bronhouder/Create
         public IActionResult Create()
