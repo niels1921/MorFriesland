@@ -35,7 +35,7 @@ namespace MorFriesland.Controllers
             var meldingen = from k in _context.Melding
                             select k;
 
-            if (!String.IsNullOrEmpty(SearchString))
+            if (!String.IsNullOrWhiteSpace(SearchString))
             {
                 meldingen = meldingen.Where(s => s.Naam.Contains(SearchString));
             }
