@@ -16,14 +16,19 @@
 
         <div class="col-lg-6">
             <form asp-controller="Beheer" asp-action="Index" method="get" id="SearchString">
+                <label><input type="checkbox" name="gearchiveerd" value="true" id="checkboxfilter" /> Alle meldingen</label>
+
                 <div class="input-group">
-          
+
                     <select name="SearchString" class="form-control" asp-items="ViewBag.Categorie_Id">
-                        <option> </option>
+                        <option value="">Alle meldingen</option>
                     </select>
 
 
+
                     <span class="input-group-btn">
+
+
                         <button class="btn btn-default" type="submit">Filter</button>
                     </span>
                 </div><!-- /input-group -->

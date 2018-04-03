@@ -27,21 +27,45 @@ namespace MorFriesland.Controllers
         }
 
         // GET: Beheer
-        public async Task<IActionResult> Index(string SearchString)
+        public async Task<IActionResult> Index(string SearchString, bool gearchiveerd)
         {
+
+            DateTime nu = DateTime.Now;
+            nu = nu.AddDays(-1);
 
             ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Naam", "Naam");
             //var applicationDbContext = _context.Melding.Include(m => m.Categorie).Include(m => m.Melder);
-            var meldingen = from k in _context.Melding
-                            select k;
 
-            if (!String.IsNullOrWhiteSpace(SearchString))
-            {
-                meldingen = meldingen.Where(s => s.Naam.Contains(SearchString));
+            var applicationDbContext = _context.Melding.Include(m => m.Categorie).Include(m => m.Melder);
+
+            var meldingen = from x in applicationDbContext
+                            where x.Opgelosttijd > nu || x.Opgelosttijd == null
+                            select x;
+
+
+                if ((gearchiveerd == true) && (!String.IsNullOrWhiteSpace(SearchString)))
+                {
+                    meldingen = from x in applicationDbContext
+                                select x;
+
+                    meldingen = meldingen.Where(s => s.Naam.Contains(SearchString));
+                }
+                else if (!String.IsNullOrWhiteSpace(SearchString))
+                {
+                    meldingen = meldingen.Where(s => s.Naam.Contains(SearchString));
+                } else if (gearchiveerd == true)
+                {
+                    meldingen = from x in applicationDbContext
+                            select x;
+
             }
 
-
+         
             
+
+
+
+
             return View(await meldingen.ToListAsync());
         }
 

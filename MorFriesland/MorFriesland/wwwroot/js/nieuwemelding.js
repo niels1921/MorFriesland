@@ -98,7 +98,7 @@ $("#submit").submit(function (e) {
 
             $("#gemeente").val(gemeentenaam);
 
-            if (field.docs[0].provincienaam != "Friesland") {
+            if (field.docs[0].provincienaam !== "Friesland") {
                 alert("U kunt helaas geen melding doen buiten Friesland");
                 $(".loader").hide();
 
