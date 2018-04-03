@@ -10,9 +10,11 @@ using MorFriesland.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MorFriesland.Controllers
 {
+   // [Authorize(Roles = "Beheerder, Admin")]
     public class BeheerController : Controller
     {
         private readonly ApplicationDbContext _context;
