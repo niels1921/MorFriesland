@@ -51,7 +51,7 @@ namespace MorFriesland.Controllers
         }
 
         // GET: Bronhouder/Edit/5
-        [Authorize(Roles = "Admins")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
