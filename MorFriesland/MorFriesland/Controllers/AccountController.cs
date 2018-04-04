@@ -68,7 +68,7 @@ namespace MorFriesland.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
+                    _logger.LogInformation("Gebruiker ingelogd");
                     return RedirectToLocal("/Melding/Alle");
                 }
                 if (result.RequiresTwoFactor)
@@ -77,12 +77,12 @@ namespace MorFriesland.Controllers
                 }
                 if (result.IsLockedOut)
                 {
-                    _logger.LogWarning("User account locked out.");
+                    _logger.LogWarning("Account gelocked");
                     return RedirectToAction(nameof(Lockout));
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Verkeerde E-mail of wachtwoord");
                     return View(model);
                 }
             }
@@ -228,7 +228,7 @@ namespace MorFriesland.Controllers
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User created a new account with password.");
+                    _logger.LogInformation("Nieuwe gebruiker aangemaakt met wachtwoord");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
@@ -240,7 +240,7 @@ namespace MorFriesland.Controllers
                     }
 
                     //await _signInManager.SignInAsync(user, isPersistent: false);
-                    _logger.LogInformation("User created a new account with password.");
+                    _logger.LogInformation("Nieuwe gebruiker aangemaakt met wachtwoord");
                     return RedirectToLocal("/Melding/Alle");
                 }
                 AddErrors(result);
@@ -255,7 +255,7 @@ namespace MorFriesland.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            _logger.LogInformation("User logged out.");
+            _logger.LogInformation("Gebruiker uitgelogd");
             return RedirectToAction(nameof(MeldingController.Index), "/Melding/Alle");
         }
 
