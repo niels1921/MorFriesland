@@ -345,6 +345,8 @@ footer {
         border: none;
         width: 100%;
     }
-
+    img.meldfoto{
+        max-width: 170px !important;
+    }
 }
 
