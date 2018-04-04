@@ -327,6 +327,24 @@ footer {
     .meldingtitle{
         margin-top: 0px;
     }
+    .col-md-8.bronhouders {
+        margin-top: 75px;
+    }
+
+    .col-md-6.manageindex {
+        margin-bottom: 10px;
+    }
+    button.btn.btn-default.meldingbutton {
+        margin-top: 0px;
+        border-radius: 0px;
+        border-bottom: 1px solid white;
+        margin-right: 0px;
+        padding: 15px 15px !important;
+        text-align: left;
+        vertical-align: -webkit-baseline-middle;
+        border: none;
+        width: 100%;
+    }
 
 }
 

@@ -7,7 +7,7 @@
 <h4>@ViewData["Title"]</h4>
 @Html.Partial("_StatusMessage", Model.StatusMessage)
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-6 manageindex">
         <form method="post">
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
@@ -26,7 +26,6 @@
                 else
                 {
                     <input asp-for="Email" class="form-control" />
-                    <button asp-action="SendVerificationEmail" class="btn btn-link">Stuur e-mail verificatie</button>
                 }
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>

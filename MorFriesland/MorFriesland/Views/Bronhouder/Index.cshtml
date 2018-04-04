@@ -8,33 +8,35 @@
 
 <p>
     <a class="btn btn-default meldingbutton" asp-action="Create">Nieuwe Bronhouder</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
+</p>  <div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
                 <th>
                     @Html.DisplayNameFor(model => model.Gemeente)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Email)
                 </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Gemeente)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Bewerken</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Verwijderen</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Gemeente)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Bewerken</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Verwijderen</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    </div>

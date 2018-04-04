@@ -43,54 +43,56 @@
     </div>
     <div class="row">
         <div class="col-md-5">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Categorie)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Beschrijving)
-                        </th>
-
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
                         <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Categorie)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Beschrijving)
+                            </th>
 
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Categorie.Naam)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Beschrijving)
-                            </td>
-
-                            <td>
-                                <a asp-action="Details" asp-route-id="@item.Id">Beheer</a>
-                            </td>
+                            <th></th>
                         </tr>
-                        <div id="meldingen" style="display: none;" data-lat="@item.Lat" data-lng="@item.Long" data-name="@item.Naam" data-img="/uploads/@item.Naam/@item.Foto" data-beschrijving="@item.Beschrijving" data-id="@item.Id"></div>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                {
 
-                    }
-                </tbody>
-            </table>
-        </div>
-        <div class="col-md-7">
-            <input id="pac-input" class="controls" type="text"
-                   placeholder="Zoek een locatie">
-            <div class="nieuwemap" id="map"></div>
-            <div id="infowindow-content">
-                <span id="place-name" class="title"></span><br>
+                    <tr>
 
-                <span id="place-address"></span>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Categorie.Naam)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Beschrijving)
+                        </td>
+
+                        <td>
+                            <a asp-action="Details" asp-route-id="@item.Id">Beheer</a>
+                        </td>
+                    </tr>
+                    <div id="meldingen" style="display: none;" data-lat="@item.Lat" data-lng="@item.Long" data-name="@item.Naam" data-img="/uploads/@item.Naam/@item.Foto" data-beschrijving="@item.Beschrijving" data-id="@item.Id"></div>
+
+        }
+                    </tbody>
+                </table>
+                </div>
             </div>
-            <script src="~/js/allemeldingen.js"></script>
-            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCK3VEpVPHSGvBnYuGfLUYYtj1MnJ4rPWg&libraries=places&callback=initMap" async defer></script>
+            <div class="col-md-7">
+                <input id="pac-input" class="controls" type="text"
+                       placeholder="Zoek een locatie">
+                <div class="nieuwemap" id="map"></div>
+                <div id="infowindow-content">
+                    <span id="place-name" class="title"></span><br>
+
+                    <span id="place-address"></span>
+                </div>
+                <script src="~/js/allemeldingen.js"></script>
+                <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCK3VEpVPHSGvBnYuGfLUYYtj1MnJ4rPWg&libraries=places&callback=initMap" async defer></script>
+            </div>
         </div>
-    </div>
 </body>
 </html>
