@@ -20,6 +20,7 @@ namespace MorFriesland.Models
         public string Beschrijving { get; set; }            
         public string Foto { get; set; }
 
+        //[EmailAddress(ErrorMessage = "Dit is niet een geldig e-mailadres")]
         public string Email { get; set; }
         public string Long { get; set; }
         public string Lat { get; set; }

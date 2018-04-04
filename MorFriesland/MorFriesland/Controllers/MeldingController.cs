@@ -113,21 +113,14 @@ namespace MorFriesland.Controllers
             ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Id", "Naam");
             ViewData["User_id"] = new SelectList(_context.Users, "Id", "Id");
 
-            //var applicationDbContext = _context.Melding.Include(m => m.Categorie).Include(m => m.Melder);
+            MeldingVM meldingen = new MeldingVM();
 
+            var Meldingen = from Melding in _context.Melding
+                        select Melding;
 
-            //MeldingVM meldingen = new MeldingVM();
+            meldingen.Meldingen = Meldingen;
 
-            //var Meldingen = from Melding in _context.Melding
-            //            select Melding;
-
-
-            //meldingen.Meldingen = Meldingen;
-
-
-            //return View(meldingen);
-
-            return View();
+            return View(meldingen);
         }
 
         // POST: Melding/Create
@@ -180,8 +173,8 @@ namespace MorFriesland.Controllers
             string beschrijving ="";
 
             string email = melding.Email;
-            
 
+            
             if (ModelState.IsValid)
             {
 
@@ -215,7 +208,7 @@ namespace MorFriesland.Controllers
 
                 if (user != null)
                 {
-                    if (email2 != "false")
+                    if(email2 != "false")
                     {
                         melding.Email = user.Email;
 
@@ -246,12 +239,11 @@ namespace MorFriesland.Controllers
                     var htmlContent = "Mail van de melding <br> Beschrijving: " + beschrijving + Environment.NewLine;
                     var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
                     var response = await client.SendEmailAsync(msg);
-                }
-                else if (bronhouder.Count() >= 2)
+                } else if(bronhouder.Count() >= 2)
                 {
                     foreach (Bronhouder item in bronhouder)
                     {
-
+                        
                         var apiKey2 = Environment.GetEnvironmentVariable("SENDGRID_KEY");
                         var client2 = new SendGridClient(apiKey2);
                         var from2 = new EmailAddress("boge1300@student.nhl.nl", "MOR Friesland");
@@ -263,9 +255,8 @@ namespace MorFriesland.Controllers
                             " <a href=https://morfriesland20180329110629.azurewebsites.net/beheer/Details/" + melding.Id + "> Beheer pagina</a>";
                         var msg2 = MailHelper.CreateSingleEmail(from2, to2, subject2, plainTextContent2, htmlContent2);
                         var response2 = client2.SendEmailAsync(msg2);
-                    }
-                }
-                else if (bronhouder.Count() == 1)
+                    } 
+                } else if(bronhouder.Count() == 1)
                 {
 
                     var apiKey2 = Environment.GetEnvironmentVariable("SENDGRID_KEY");
@@ -278,10 +269,9 @@ namespace MorFriesland.Controllers
                     var htmlContent2 = "Mail van de melding " + melding.Naam + "<br> Beschrijving: <br> " + beschrijving + "<br>" +
                         " <a href=https://morfriesland20180329110629.azurewebsites.net/beheer/Details/" + melding.Id + "> Beheer pagina</a>";
                     var msg2 = MailHelper.CreateSingleEmail(from2, to2, subject2, plainTextContent2, htmlContent2);
-                    var response2 = client2.SendEmailAsync(msg2);
-                }
-                else
-                {
+                    var response2 = client2.SendEmailAsync(msg2);                   
+                }           
+                else{
 
                     var apiKey2 = Environment.GetEnvironmentVariable("SENDGRID_KEY");
                     var client2 = new SendGridClient(apiKey2);
@@ -294,19 +284,18 @@ namespace MorFriesland.Controllers
                         " <a href=https://morfriesland20180329110629.azurewebsites.net/beheer/Details/" + melding.Id + "> Beheer pagina</a>";
                     var msg2 = MailHelper.CreateSingleEmail(from2, to2, subject2, plainTextContent2, htmlContent2);
                     var response2 = client2.SendEmailAsync(msg2);
-
-                }
+                    
+                
+            }
 
                 _context.Add(melding);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Alle));
-
 
             }
 
             ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Id", "Naam", melding.Categorie_Id);
             ViewData["User_id"] = new SelectList(_context.Users, "Id", "Id", melding.User_id);
-            return View(melding);
+            return RedirectToAction(nameof(Alle));
         }
 
         // GET: Melding/Edit/5
