@@ -334,7 +334,7 @@ footer {
     .col-md-6.manageindex {
         margin-bottom: 10px;
     }
-    button.btn.btn-default.meldingbutton {
+    button.btn.btn-default.meldingbutton.uitloggen {
         margin-top: 0px;
         border-radius: 0px;
         border-bottom: 1px solid white;
