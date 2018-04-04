@@ -95,8 +95,16 @@
 
 .btn.btn-default.meldingbutton {
     background-color: #244994;
-    border-color: #244994;
-    color: white;
+    border-radius: 8px;
+    margin-right: 10px;
+    margin-top: 4px;
+    padding: 8px 25px !important;
+    color: #fff;
+}
+
+.btn.btn-default.meldingbutton:hover {
+    color: #ffffff;
+    background-color: #2d59b4;
 }
 
 .infobeschrijving {
