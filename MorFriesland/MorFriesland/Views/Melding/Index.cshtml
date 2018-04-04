@@ -27,17 +27,18 @@
             <div class="form-group">
                 <label><input type="checkbox" id="EmailCheckbox" value="false" /> Houdt mij op de hoogte</label>
                 @if (!User.Identity.IsAuthenticated)
-                {
-                    <input id="email" asp-for="Melding.Email" placeholder="Email" class="form-control" />
-                    <div style="display: none;" data-ingelogd="loggedout" class="ingelogd"></div>
-                }
-                else
-                {
-                    <input type="hidden" id="email" asp-for="Melding.Email" placeholder="Email" value="false" class="form-control" />
+    {
+            <input id="email" asp-for="Melding.Email" placeholder="Email" class="form-control" />
+            <div style="display: none;" data-ingelogd="loggedout" class="ingelogd"></div>
+            <span asp-validation-for="Melding.Email" class="text-danger"></span>
 
-                    <div style="display: none;" data-ingelogd="loggedin" class="ingelogd"></div>
-                }
-                <span asp-validation-for="Melding.Email" class="text-danger"></span>
+}
+else
+{
+            <input type="hidden" id="email" asp-for="Melding.Email" placeholder="Email" value="false" class="form-control" />
+
+            <div style="display: none;" data-ingelogd="loggedin" class="ingelogd"></div>
+}
             </div>
             <input type="hidden" id="nieuwlong" asp-for="Melding.Long" class="form-control" />
             <input type="hidden" id="nieuwlat" asp-for="Melding.Lat" class="form-control" />
