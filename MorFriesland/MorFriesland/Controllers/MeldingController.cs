@@ -18,6 +18,7 @@ using SendGrid.Helpers.Mail;
 using SendGrid;
 using System.Globalization;
 using System.Web;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MorFriesland.Controllers
 {
@@ -299,6 +300,7 @@ namespace MorFriesland.Controllers
         }
 
         // GET: Melding/Edit/5
+        [Authorize(Roles ="Admin, Beheerder")]
         public async Task<IActionResult> Bewerk(int? id)
         {
             if (id == null)
@@ -354,6 +356,7 @@ namespace MorFriesland.Controllers
         }
 
         // GET: Melding/Delete/5
+        [Authorize(Roles ="Admin, Beheerder")]
         public async Task<IActionResult> Verwijder(int? id)
         {
             if (id == null)

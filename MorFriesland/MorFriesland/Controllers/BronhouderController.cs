@@ -11,7 +11,7 @@ using MorFriesland.Models;
 
 namespace MorFriesland.Controllers
 {
-    //[Authorize(Roles ="Admin, Beheerder")]
+    [Authorize(Roles ="Admin, Beheerder")]
     public class BronhouderController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -51,6 +51,7 @@ namespace MorFriesland.Controllers
         }
 
         // GET: Bronhouder/Edit/5
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -102,6 +103,7 @@ namespace MorFriesland.Controllers
         }
 
         // GET: Bronhouder/Delete/5
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
