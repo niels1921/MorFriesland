@@ -83,6 +83,12 @@ $(document).ready(function () {
 
         $(".loader").show();
 
+        if ($("#validatie").is("span.text-danger.field-validation-error")) {
+            $(".loader").hide();
+
+        }
+
+
         console.log("iets hier");
         form = $("#submit");
 
