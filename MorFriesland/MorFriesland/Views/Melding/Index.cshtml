@@ -1,64 +1,51 @@
-﻿@model MorFriesland.Models.Melding
-
+﻿@model MorFriesland.Models.ViewModels.MeldingVM
 @{
     ViewData["Title"] = "Nieuw";
 }
-
 <h2 class="meldingtitle">Nieuwe melding</h2>
-
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Index" enctype="multipart/form-data" id="submit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Categorie_Id" class="control-label"></label>
-                <select asp-for="Categorie_Id" class="form-control" asp-items="ViewBag.Categorie_Id"></select>
+                <label asp-for="Melding.Categorie_Id" class="control-label"></label>
+                <select asp-for="Melding.Categorie_Id" class="form-control" asp-items="ViewBag.Categorie_Id"></select>
             </div>
             <div class="form-group">
-                <label asp-for="Beschrijving" class="control-label"></label>
-                <textarea asp-for="Beschrijving" class="form-control" rows="4"> </textarea>
-                <span asp-validation-for="Beschrijving" class="text-danger"></span>
+                <label asp-for="Melding.Beschrijving" class="control-label"></label>
+                <textarea asp-for="Melding.Beschrijving" class="form-control" rows="4"> </textarea>
+                <span asp-validation-for="Melding.Beschrijving" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Foto" class="control-label"></label>
-
-                <input type="hidden" asp-for="Foto" />
-
+                <label asp-for="Melding.Foto" class="control-label"></label>
+                <input type="hidden" asp-for="Melding.Foto" />
                 <input type="file" class="bestand" name="Image" accept="image/jpeg,image/png" />
-                <span asp-validation-for="Foto" class="text-danger"></span>
-
+                <span asp-validation-for="Melding.Foto" class="text-danger"></span>
             </div>
-
-
 
             <div class="form-group">
                 <label><input type="checkbox" id="EmailCheckbox" value="false" /> Houdt mij op de hoogte</label>
                 @if (!User.Identity.IsAuthenticated)
                 {
-                    <input id="email" asp-for="Email" placeholder="Email" class="form-control" />
+                    <input id="email" asp-for="Melding.Email" placeholder="Email" class="form-control" />
                     <div style="display: none;" data-ingelogd="loggedout" class="ingelogd"></div>
                 }
                 else
                 {
-                    <input type="hidden" id="email" asp-for="Email" placeholder="Email" value="false" class="form-control" />
+                    <input type="hidden" id="email" asp-for="Melding.Email" placeholder="Email" value="false" class="form-control" />
 
                     <div style="display: none;" data-ingelogd="loggedin" class="ingelogd"></div>
                 }
-
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <span asp-validation-for="Melding.Email" class="text-danger"></span>
             </div>
-
-            <input type="hidden" id="nieuwlong" asp-for="Long" class="form-control" />
-            <input type="hidden" id="nieuwlat" asp-for="Lat" class="form-control" />
-
-            <input type="hidden" id="gemeente" asp-for="Gemeente" class="form-control" />
-
+            <input type="hidden" id="nieuwlong" asp-for="Melding.Long" class="form-control" />
+            <input type="hidden" id="nieuwlat" asp-for="Melding.Lat" class="form-control" />
+            <input type="hidden" id="gemeente" asp-for="Melding.Gemeente" class="form-control" />
 
             <div class="form-group">
                 <button type="button" id="meldingsubmit" class="btn btn-default meldingbutton"> Melden</button>
                 <div class="loader"></div>
-
             </div>
         </form>
     </div>
@@ -68,19 +55,17 @@
         <div class="nieuwemap" id="map"></div>
         <div id="infowindow-content">
             <span id="place-name" class="title"></span><br>
-
             <span id="place-address"></span>
         </div>
         <script src="~/js/nieuwemelding.js"></script>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCK3VEpVPHSGvBnYuGfLUYYtj1MnJ4rPWg&libraries=places&callback=initMap" async defer></script>
 
-
-
     </div>
 </div>
-
-@*@Html.Partial("meldingpartial")*@
-
+@foreach (Melding melding in Model.Meldingen)
+{
+    <div id="meldingen" data-lat="@melding.Lat" data-lng="@melding.Long"></div>
+}
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
