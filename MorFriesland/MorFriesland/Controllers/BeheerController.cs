@@ -17,7 +17,7 @@ using SendGrid;
 
 namespace MorFriesland.Controllers
 {
-   // [Authorize(Roles = "Beheerder, Admin")]
+    [Authorize(Roles = "Beheerder, Admin")]
     public class BeheerController : Controller
     {
         private readonly ApplicationDbContext _context;
