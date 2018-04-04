@@ -30,7 +30,7 @@
     {
             <input id="email" asp-for="Melding.Email" placeholder="Email" class="form-control" />
             <div style="display: none;" data-ingelogd="loggedout" class="ingelogd"></div>
-            <span asp-validation-for="Melding.Email" class="text-danger"></span>
+            <span id="validatie" asp-validation-for="Melding.Email" class="text-danger"></span>
 
 }
 else
