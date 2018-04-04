@@ -189,7 +189,9 @@ namespace MorFriesland.Controllers
 
             if (ModelState.IsValid)
             {
-                melding.Opgelosttijd = DateTime.Now;
+                var timezone = TimeZoneInfo.FindSystemTimeZoneById("Central Europe Standard Time");
+                var dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, timezone);
+                melding.Opgelosttijd = dateTime;
                 try
                 {
                     _context.Update(melding);
@@ -207,7 +209,7 @@ namespace MorFriesland.Controllers
                     }
                 }
                 string beschrijving = melding.Beschrijving;
-                if (melding.Opgelosttijd != null && melding.Email != "false")
+                if (melding.Opgelosttijd != null && melding.Email != "false@false.nl")
                 {
                     var apiKey = Environment.GetEnvironmentVariable("SENDGRID_KEY");
                     var client = new SendGridClient(apiKey);
@@ -219,10 +221,10 @@ namespace MorFriesland.Controllers
                     var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
                     var response = await client.SendEmailAsync(msg);
                 }
-                return RedirectToAction(nameof(Index));
+               
             }
 
-            return View(melding);
+            return RedirectToAction(nameof(Index));
         }
 
 
