@@ -28,7 +28,7 @@
                 <label><input type="checkbox" id="EmailCheckbox" value="false" /> Houdt mij op de hoogte</label>
                 @if (!User.Identity.IsAuthenticated)
                 {
-                    <input id="email" asp-for="Melding.Email" placeholder="Email" class="form-control" />
+                    <input type="email" id="email" asp-for="Melding.Email" placeholder="Email" class="form-control" />
                     <div style="display: none;" data-ingelogd="loggedout" class="ingelogd"></div>
                 }
                 else
