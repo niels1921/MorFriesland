@@ -22,8 +22,9 @@
             </dt>
             @if (Model.Foto != null)
         {
-            <dd>                
-                @Html.DisplayFor(model => model.Foto)
+            <dd>
+                <img style="max-width:100%" src="/uploads/@Html.DisplayFor(model=> model.Naam)/@Html.DisplayFor(model=> model.Foto)" />
+                @*@Html.DisplayFor(model=> model.Foto)*@
             </dd>
     }
     else
