@@ -120,7 +120,6 @@ namespace MorFriesland.Controllers
 
             meldingen.Meldingen = Meldingen;
 
-
             return View(meldingen);
         }
 
@@ -174,8 +173,8 @@ namespace MorFriesland.Controllers
             string beschrijving ="";
 
             string email = melding.Email;
-            
 
+            
             if (ModelState.IsValid)
             {
 
@@ -256,7 +255,6 @@ namespace MorFriesland.Controllers
                             " <a href=https://morfriesland20180329110629.azurewebsites.net/beheer/Details/" + melding.Id + "> Beheer pagina</a>";
                         var msg2 = MailHelper.CreateSingleEmail(from2, to2, subject2, plainTextContent2, htmlContent2);
                         var response2 = client2.SendEmailAsync(msg2);
-                        return RedirectToAction(nameof(Alle));
                     } 
                 } else if(bronhouder.Count() == 1)
                 {
@@ -271,8 +269,7 @@ namespace MorFriesland.Controllers
                     var htmlContent2 = "Mail van de melding " + melding.Naam + "<br> Beschrijving: <br> " + beschrijving + "<br>" +
                         " <a href=https://morfriesland20180329110629.azurewebsites.net/beheer/Details/" + melding.Id + "> Beheer pagina</a>";
                     var msg2 = MailHelper.CreateSingleEmail(from2, to2, subject2, plainTextContent2, htmlContent2);
-                    var response2 = client2.SendEmailAsync(msg2);
-                    return RedirectToAction(nameof(Alle));
+                    var response2 = client2.SendEmailAsync(msg2);                   
                 }           
                 else{
 
@@ -287,7 +284,7 @@ namespace MorFriesland.Controllers
                         " <a href=https://morfriesland20180329110629.azurewebsites.net/beheer/Details/" + melding.Id + "> Beheer pagina</a>";
                     var msg2 = MailHelper.CreateSingleEmail(from2, to2, subject2, plainTextContent2, htmlContent2);
                     var response2 = client2.SendEmailAsync(msg2);
-                    return RedirectToAction(nameof(Alle));
+                    
                 
             }
 
@@ -298,7 +295,7 @@ namespace MorFriesland.Controllers
 
             ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Id", "Naam", melding.Categorie_Id);
             ViewData["User_id"] = new SelectList(_context.Users, "Id", "Id", melding.User_id);
-            return View(melding);
+            return RedirectToAction(nameof(Alle));
         }
 
         // GET: Melding/Edit/5
