@@ -446,15 +446,7 @@ namespace MorFriesland.Controllers
             return View();
         }
 
-        public async Task<IActionResult> AddRole(string role)
-        {
-            if (!await _roleManager.RoleExistsAsync(role))
-            {
-                await _roleManager.CreateAsync(new IdentityRole(role));
-                
-            }
-            return Json(_roleManager.Roles);
-        }
+        
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
@@ -476,8 +468,9 @@ namespace MorFriesland.Controllers
                  IdentityResult result = await _userManager.AddToRoleAsync(user, name);
             }
 
-            
-            return Json(await _userManager.GetRolesAsync(user));
+            ViewData["UserName"] = new SelectList(_context.Users, "UserName", "UserName");
+            ViewData["Name"] = new SelectList(_context.Roles, "Name", "Name");
+            return RedirectToAction(nameof(ManageController.Index),"Manage");
         }
 
 
