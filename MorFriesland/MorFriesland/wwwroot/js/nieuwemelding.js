@@ -74,7 +74,6 @@ function Ondrag(event) {
     url = "https://geodata.nationaalgeoregister.nl/locatieserver/v3/free?lat=" + lat + "&lon=" + lng;
 
 
-    console.log(url);
 
 
 }
@@ -167,17 +166,56 @@ function SetPosistion(position) {
 
     locationstring.open(map, Locationmarker);
 
-
     $('#meldingen[data-lat]').each(function () {
 
         var latdata = $(this).data('lat');
         var lngdata = $(this).data('lng');
+        var Name = $(this).data('name');
+        var Beschrijving = $(this).data('beschrijving');
+        var Img = $(this).data('img');
+
+        var id = $(this).data('id');
+        console.log(id);
+
+        var url = "https://morfriesland20180329110629.azurewebsites.net/beheer/details/" + id;
+
+        var content = "";
+
+        if (id !== undefined) {
+            if (Img !== "/uploads/" + Name + "/") {
+                content = "<div class='col-md-12 nopadding'><div class='col-md-4 nopadding'><img style='max-width: 100%;' src='" + Img + "'></div><div class='col-md-8 infobeschrijving'><b>" + Name + "</b><br/>" + Beschrijving + "<br/> <a href='" + url + "'>Bekijk melding</a> </div></div>";
+            } else {
+                content = "<div class='col-md-12 nopadding'><b>" + Name + "</b><br/>" + Beschrijving + "<br/> <a href='" + url + "'>Bekijk melding</a> </div>";
+            }
+        } else {
+            content = "";
+            if (Img !== "/uploads/" + Name + "/") {
+                content = "<div class='col-md-12 nopadding'><div class='col-md-4 nopadding'><img style='max-width: 100%;' src='" + Img + "'></div><div class='col-md-8 infobeschrijving'><b>" + Name + "</b><br/>" + Beschrijving + "</div></div>";
+            } else {
+                content = "<div class='col-md-12 nopadding'><b>" + Name + "</b><br/>" + Beschrijving + "</div>";
+            }
+        }
+
+
+
+
 
         var marker = new google.maps.Marker({
             position: { lat: latdata, lng: lngdata },
             title: 'Home Center',
             map: map,
             icon: icon2
+
+        });
+
+        var infoWindow = new google.maps.InfoWindow({
+            content: content,
+            maxWidth: 400
+
+        });
+
+        google.maps.event.addListener(marker, 'click', function () {
+            infoWindow.open(map, marker);
         });
 
     });
