@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Authorization;
+ using System.Net.Mail;
+using SendGrid.Helpers.Mail;
+using SendGrid;
 
 namespace MorFriesland.Controllers
 {
@@ -163,6 +166,20 @@ namespace MorFriesland.Controllers
                         throw;
                     }
                 }
+                //string beschrijving = melding.Beschrijving;
+                //if (melding.Opgelosttijd != null)
+                //{
+                //    var apiKey = Environment.GetEnvironmentVariable("SENDGRID_KEY");
+                //    var client = new SendGridClient(apiKey);
+                //    var from = new EmailAddress("boge1300@student.nhl.nl", "MOR Friesland");
+                //    var subject = "Melding" + melding.Naam;
+                //    var to = new EmailAddress(melding.Email);
+                //    var plainTextContent = "koptext?";
+                //    var htmlContent = "Mail van de melding <br> Beschrijving: " + beschrijving + Environment.NewLine;
+                //    var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+                //    var response = await client.SendEmailAsync(msg);
+                //}
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["Categorie_Id"] = new SelectList(_context.Categorie, "Id", "Id", melding.Categorie_Id);
