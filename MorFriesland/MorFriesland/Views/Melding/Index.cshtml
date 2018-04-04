@@ -62,9 +62,9 @@
 
     </div>
 </div>
-@foreach (Melding melding in Model.Meldingen)
+@foreach (Melding item in Model.Meldingen)
 {
-    <div id="meldingen" data-lat="@melding.Lat" data-lng="@melding.Long"></div>
+    <div id="meldingen" style="display: none;" data-lat="@item.Lat" data-lng="@item.Long" data-name="@item.Naam" data-img="/uploads/@item.Naam/@item.Foto" data-beschrijving="@item.Beschrijving"></div>
 }
 
 @section Scripts {
