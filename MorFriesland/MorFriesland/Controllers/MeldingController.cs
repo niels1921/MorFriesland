@@ -223,13 +223,17 @@ namespace MorFriesland.Controllers
                 var subject = "Melding " + melding.Naam;
                 var plainTextContent = "koptext?";
 
-                if (melding.Email != "false")
+                if (melding.Email != "false@false.nl" && melding.Email != null)
                 {
                     var to = new EmailAddress(melding.Email);
                     var htmlContent = "Mail van de melding <br> Beschrijving: " + beschrijving;
                     var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
                     var response = await client.SendEmailAsync(msg);
                 }
+
+                _context.Add(melding);
+                await _context.SaveChangesAsync();
+
                 if (bronhouder.Count() >= 2)
                 {
                     foreach (Bronhouder item in bronhouder)
@@ -248,10 +252,7 @@ namespace MorFriesland.Controllers
                         " <a href=https://morfriesland20180329110629.azurewebsites.net/beheer/Details/" + melding.Id + "> Beheer pagina</a>";
                     var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
                     var response = client.SendEmailAsync(msg);
-                }
-                _context.Add(melding);
-                await _context.SaveChangesAsync();
-
+                }               
             }
             ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Id", "Naam", melding.Categorie_Id);
             ViewData["User_id"] = new SelectList(_context.Users, "Id", "Id", melding.User_id);
