@@ -223,7 +223,7 @@ namespace MorFriesland.Controllers
                 var subject = "Melding " + melding.Naam;
                 var plainTextContent = "koptext?";
 
-                if (melding.Email != null)
+                if (melding.Email != "false")
                 {
                     var to = new EmailAddress(melding.Email);
                     var htmlContent = "Mail van de melding <br> Beschrijving: " + beschrijving;
