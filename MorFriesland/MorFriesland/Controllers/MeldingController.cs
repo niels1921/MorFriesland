@@ -201,7 +201,7 @@ namespace MorFriesland.Controllers
 
                 if (user != null)
                 {
-                    if(email != "false")
+                    if(email != "false@false.nl")
                     {
                         melding.Email = user.Email;
 
