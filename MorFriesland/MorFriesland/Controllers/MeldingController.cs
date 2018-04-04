@@ -131,8 +131,6 @@ namespace MorFriesland.Controllers
         public async Task<IActionResult> Index([Bind("Id,Categorie_Id,Beschrijving,Foto,Email,Long,Lat,Gearchiveerd,User_id,Gemeente")] Melding melding, IFormFile Image)
         {
             string userId = this.User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
-            //var apiKey = System.Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
-            //var client = new SendGridClient(apiKey);
 
             ApplicationUser user = (from x in _context.Users
                             where x.Id == userId
@@ -146,14 +144,18 @@ namespace MorFriesland.Controllers
                                      where bron.Gemeente == melding.Gemeente
                                      select bron;
 
-
             string bronhoudermail = "";
+            string beschrijving = "";
             string defaultmail = "nieu1702@student.nhl.nl";
+            string email = melding.Email;
+            string naam = melding.Naam;
+            melding.Naam = categorienaam.Naam;
 
             if (bronhouder == null)
             {
                 bronhoudermail = defaultmail;
             }
+
             if (bronhouder.Count() == 1)
             {
                 Bronhouder Brn = (from bron in _context.Bronhouder
@@ -164,17 +166,7 @@ namespace MorFriesland.Controllers
             else
             {
                 bronhoudermail = defaultmail;
-
             }
-
-            string naam = melding.Naam;
-            string email2 = melding.Email;
-
-            melding.Naam = categorienaam.Naam;
-            string beschrijving ="";
-
-            string email = melding.Email;
-
             
             if (ModelState.IsValid)
             {
@@ -190,7 +182,6 @@ namespace MorFriesland.Controllers
                         FileName = FileName.Split('\\').Last();
                     }
                     
-
                     using (var stream = new FileStream(Path.Combine(uploadPatch, melding.Naam, FileName), FileMode.Create))
                     {
                         await Image.CopyToAsync(stream);
@@ -209,7 +200,7 @@ namespace MorFriesland.Controllers
 
                 if (user != null)
                 {
-                    if(email2 != "false")
+                    if(email != "false")
                     {
                         melding.Email = user.Email;
 
@@ -221,8 +212,8 @@ namespace MorFriesland.Controllers
                 {
                     melding.User_id = null;
                 }
-                melding.Opgelosttijd = null;
 
+                melding.Opgelosttijd = null;
                 beschrijving = melding.Beschrijving;
 
                 var apiKey = Environment.GetEnvironmentVariable("SENDGRID_KEY");
