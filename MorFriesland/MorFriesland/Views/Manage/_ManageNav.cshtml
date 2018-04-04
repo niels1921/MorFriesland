@@ -10,7 +10,17 @@
     @if (hasExternalLogins)
     {
         <li class="@ManageNavPages.ExternalLoginsNavClass(ViewContext)"><a asp-action="ExternalLogins">External logins</a></li>
-    }   
-    <li class="@ManageNavPages.MijnMeldingenNavClass(ViewContext)"><a asp-action="MijnMeldingen">Mijn Meldingen</a></li>
+    }
+    @if (User.IsInRole("Gebruiker"))
+    {
+        <li class="@ManageNavPages.MijnMeldingenNavClass(ViewContext)"><a asp-controller="Melding" asp-action="MijnMeldingen">Mijn Meldingen</a></li>
+    }
+    else if (User.IsInRole("Beheerder") || User.IsInRole("Admin"))
+    {
+        <li class="@ManageNavPages.MijnMeldingenNavClass(ViewContext)"><a asp-controller="Beheer" asp-action="Index">Beheer</a></li>
+        <li class="@ManageNavPages.MijnMeldingenNavClass(ViewContext)"><a asp-controller="Bronhouder" asp-action="Index">Bronhouders</a></li>
+        <li class="@ManageNavPages.MijnMeldingenNavClass(ViewContext)"><a asp-controller="Account" asp-action="AddUserRole">Voeg gebruikers aan rollen toe</a></li>
+    }
+    
 </ul>
 

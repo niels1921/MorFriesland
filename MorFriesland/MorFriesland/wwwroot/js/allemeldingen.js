@@ -40,11 +40,13 @@ function initMap() {
         var Img = $(this).data('img');
 
         var id = $(this).data('id');
+        console.log(id);
+
         var url = "https://morfriesland20180329110629.azurewebsites.net/beheer/details/" + id;
 
         var content = "";
 
-        if (id !== null) {
+        if (id !== undefined) {
             if (Img !== "/uploads/" + Name + "/") {
                 content = "<div class='col-md-12 nopadding'><div class='col-md-4 nopadding'><img style='max-width: 100%;' src='" + Img + "'></div><div class='col-md-8 infobeschrijving'><b>" + Name + "</b><br/>" + Beschrijving + "<br/> <a href='" + url + "'>Bekijk melding</a> </div></div>";
             } else {
