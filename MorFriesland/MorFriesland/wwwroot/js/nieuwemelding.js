@@ -90,29 +90,21 @@ $(document).ready(function () {
 
         }
 
-
-        console.log("iets hier");
         form = $("#submit");
-
-        console.log("iets hier2");
 
         var gemeentenaam = "";
 
         $.getJSON(url, function (result) {
             $.each(result, function (i, field) {
-                console.log(result);
-                console.log(field.docs[0]);
+
                 gemeentenaam = field.docs[0].gemeentenaam;
 
                 $("#gemeente").val(gemeentenaam);
-                console.log(field);
                 if (field.docs[0].provincienaam !== "Friesland") {
                     alert("U kunt helaas geen melding doen buiten Friesland");
                     $(".loader").hide();
-                    console.log("iets hier34");
 
                 } else {
-                    console.log("iets hier343454");
                     form.submit();
                 }
             })
@@ -131,9 +123,6 @@ function SetPosistion(position) {
     lng = position.coords.longitude;
 
     url = "https://geodata.nationaalgeoregister.nl/locatieserver/v3/free?lat=" + lat + "&lon=" + lng;
-
-
-    console.log(url);
 
     $("#nieuwlat").val(lat);
     $("#nieuwlong").val(lng);

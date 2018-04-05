@@ -40,7 +40,7 @@ function initMap() {
         var Img = $(this).data('img');
 
         var id = $(this).data('id');
-        console.log(id);
+        
 
         var url = "https://morfriesland20180329110629.azurewebsites.net/beheer/details/" + id;
 
@@ -67,7 +67,7 @@ function initMap() {
 
         var marker = new google.maps.Marker({
             position: { lat: latdata, lng: lngdata },
-            title: 'Home Center',
+            title: 'Melding',
             map: map,
             icon: icon2
 
@@ -131,7 +131,7 @@ function initMap() {
         $("#nieuwlat").val(place.geometry.location.lat());
         $("#nieuwlong").val(place.geometry.location.lng());
 
-        console.log(place.geometry.location.lat());
+        
 
     });
 }
