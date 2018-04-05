@@ -108,13 +108,14 @@
                 <input type="hidden" asp-for="Lat">
                 <input type="hidden" asp-for="Long">
 
+                <div class="pull-right">
                 @if (Model.Opgelosttijd == null)
     {
             <input type="submit" value="Oplossen" class="btn btn-success" />
 
 }
                 <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.Id">Verwijderen</a>
-
+                    </div>
             </form>
 
         </div>

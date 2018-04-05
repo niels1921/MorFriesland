@@ -61,6 +61,8 @@ namespace MorFriesland.Controllers
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
+
+
             if (ModelState.IsValid)
             {
                 // This doesn't count login failures towards account lockout
@@ -69,7 +71,7 @@ namespace MorFriesland.Controllers
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("Gebruiker ingelogd");
-                    return RedirectToLocal("/Melding/Alle");
+                    return RedirectToLocal(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
                 {
@@ -239,7 +241,7 @@ namespace MorFriesland.Controllers
                         await _userManager.AddToRoleAsync(user, "Gebruiker");
                     }
 
-                    //await _signInManager.SignInAsync(user, isPersistent: false);
+                    await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation("Nieuwe gebruiker aangemaakt met wachtwoord");
                     return RedirectToLocal("/Melding/Alle");
                 }
@@ -493,7 +495,7 @@ namespace MorFriesland.Controllers
             }
             else
             {
-                return RedirectToAction(nameof(MeldingController.Index), "Home");
+                return RedirectToAction(nameof(MeldingController.Index), "Melding");
             }
         }
 

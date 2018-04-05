@@ -13,14 +13,16 @@ getLocation();
 function getLocation() {
 
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(SetPosistion);       
+        navigator.geolocation.getCurrentPosition(SetPosistion); 
     }
     else {
+        defaultMap();
         initNavigator();
     }
 }
 
 function initNavigator() {
+        
     navigator.permissions.query({ name: 'geolocation' })
         .then(function (permissionStatus) {
             if (permissionStatus.state === "denied") {
