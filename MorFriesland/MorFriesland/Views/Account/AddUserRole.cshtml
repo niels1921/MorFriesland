@@ -13,23 +13,21 @@
         <form asp-action="AddUserRole">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="UserName" class="control-label"></label>
+                <label>Gebruikersnaam</label>
                 <select asp-for="UserName" class="form-control" asp-items="ViewBag.UserName"></select>
                 
             </div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
+                <label>Rol</label>
                 <select asp-for="Name" class="form-control" asp-items="ViewBag.Name"></select>
                 
             </div>
             <div class="form-group">
-                <input type="submit" value="Add Role" class="btn btn-default" />
+                <input type="submit" value="Rol toevoegen" class="btn btn-default" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
 
