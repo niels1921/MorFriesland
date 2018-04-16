@@ -36,7 +36,6 @@ function initNavigator() {
                 if (this.state === "denied") {
                     defaultMap();
                 }
-                //console.log('geolocation permission state has changed to ', this.state);
             };
         });
 }
@@ -47,22 +46,35 @@ function initNavigator() {
 //Laad de map in
 function initMap() {
 
- }
-
-function toggleBounce() {
-
-
-    if (Locationmarker.getAnimation() !== null) {
-        Locationmarker.setAnimation(null);
-    } else {
-        Locationmarker.setAnimation(google.maps.Animation.BOUNCE);
-    }
 }
 
 
-function Ondrag(event) {
 
-    locationstring.close();
+var latlng;
+
+function toggleBounce() {
+    var geocoder = new google.maps.Geocoder;
+    var infowindow = new google.maps.InfoWindow;
+
+
+    var latlngStr = latlng.split(',', 2);
+    var loc = { lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1]) };
+
+    geocodeLatLng(geocoder, map, infowindow);
+
+    function geocodeLatLng(geocoder, map, infowindow) {
+
+        geocoder.geocode({ 'location': loc }, function (results, status) {
+            infowindow.setContent(results[0].formatted_address);
+            infowindow.open(map, Locationmarker);
+        });
+    }
+
+}
+
+
+
+function Ondrag(event) {
 
     lat = event.latLng.lat();
     lng = event.latLng.lng();
@@ -71,7 +83,7 @@ function Ondrag(event) {
     $("#nieuwlong").val(lng);
 
 
-
+    latlng = lat + "," + lng;
 
     url = "https://geodata.nationaalgeoregister.nl/locatieserver/v3/free?lat=" + lat + "&lon=" + lng;
 
@@ -122,6 +134,8 @@ function SetPosistion(position) {
     lat = position.coords.latitude;
     lng = position.coords.longitude;
 
+    latlng = lat + "," + lng;
+
     url = "https://geodata.nationaalgeoregister.nl/locatieserver/v3/free?lat=" + lat + "&lon=" + lng;
 
     $("#nieuwlat").val(lat);
@@ -133,6 +147,12 @@ function SetPosistion(position) {
     var icon = {
         url: "/images/Pompebledblauw.png",
         scaledSize: new google.maps.Size(35, 35), // scaled size
+        origin: new google.maps.Point(0, 0), // origin
+        anchor: new google.maps.Point(0, 0) // anchor
+    };
+    var icongreen = {
+        url: "/images/Pompebledgreen.png",
+        scaledSize: new google.maps.Size(30, 30), // scaled size
         origin: new google.maps.Point(0, 0), // origin
         anchor: new google.maps.Point(0, 0) // anchor
     };
@@ -163,6 +183,7 @@ function SetPosistion(position) {
 
     locationstring.open(map, Locationmarker);
 
+    var pompebled = icon2;
     $('#meldingen[data-lat]').each(function () {
 
         var latdata = $(this).data('lat');
@@ -170,9 +191,18 @@ function SetPosistion(position) {
         var Name = $(this).data('name');
         var Beschrijving = $(this).data('beschrijving');
         var Img = $(this).data('img');
+        var gearchiveerd = $(this).data('gearchiveerd');
 
         var id = $(this).data('id');
-        console.log(id);
+
+        var naam;
+        if (gearchiveerd == "True") {
+            pompebled = icongreen;
+            naam = Name + ' (opgelost)';
+        } else {
+            naam = Name
+            var pompebled = icon2;
+        }
 
         var url = "https://morfriesland20180329110629.azurewebsites.net/beheer/details/" + id;
 
@@ -182,14 +212,14 @@ function SetPosistion(position) {
             if (Img !== "/uploads/" + Name + "/") {
                 content = "<div class='col-md-12 nopadding'><div class='col-md-4 nopadding'><img class='meldfoto' style='max-width: 100%;' src='" + Img + "'></div><div class='col-md-8 infobeschrijving'><b>" + Name + "</b><br/>" + Beschrijving + "<br/> <a href='" + url + "'>Bekijk melding</a> </div></div>";
             } else {
-                content = "<div class='col-md-12 nopadding'><b>" + Name + "</b><br/>" + Beschrijving + "<br/> <a href='" + url + "'>Bekijk melding</a> </div>";
+                content = "<div class='col-md-12 nopadding'><b>" + naam + "</b><br/>" + Beschrijving + "<br/> <a href='" + url + "'>Bekijk melding</a> </div>";
             }
         } else {
             content = "";
             if (Img !== "/uploads/" + Name + "/") {
                 content = "<div class='col-md-12 nopadding'><div class='col-md-4 nopadding'><img class='meldfoto' style='max-width: 100%;' src='" + Img + "'></div><div class='col-md-8 infobeschrijving'><b>" + Name + "</b><br/>" + Beschrijving + "</div></div>";
             } else {
-                content = "<div class='col-md-12 nopadding'><b>" + Name + "</b><br/>" + Beschrijving + "</div>";
+                content = "<div class='col-md-12 nopadding'><b>" + naam + "</b><br/>" + Beschrijving + "</div>";
             }
         }
 
@@ -201,7 +231,7 @@ function SetPosistion(position) {
             position: { lat: latdata, lng: lngdata },
             title: 'Home Center',
             map: map,
-            icon: icon2
+            icon: pompebled
 
         });
 
@@ -261,10 +291,10 @@ function SetPosistion(position) {
         $("#nieuwlat").val(place.geometry.location.lat());
         $("#nieuwlong").val(place.geometry.location.lng());
 
-        console.log(place.geometry.location.lat());
+        latlng = place.geometry.location.lat() + "," + place.geometry.location.lng();
+
         url = "https://geodata.nationaalgeoregister.nl/locatieserver/v3/free?lat=" + place.geometry.location.lat() + "&lon=" + place.geometry.location.lng();
 
-        console.log(url);
     });
 
 }
@@ -363,9 +393,9 @@ function defaultMap() {
         $("#nieuwlong").val(place.geometry.location.lng());
 
 
+        latlng = place.geometry.location.lat() + "," + place.geometry.location.lng();
 
 
-        console.log(place.geometry.location.lat());
 
     });
 }

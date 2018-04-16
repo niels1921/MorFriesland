@@ -19,7 +19,6 @@ $(document).ready(function () {
         if ($(".ingelogd").data('ingelogd') === "loggedin") {
             if ($('#EmailCheckbox').is(':unchecked')) {
                 $("#email").val("false@false.nl");
-                console.log("false");
             }
             else
             {

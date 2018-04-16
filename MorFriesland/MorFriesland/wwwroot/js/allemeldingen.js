@@ -18,6 +18,13 @@ function initMap() {
         anchor: new google.maps.Point(0, 0) // anchor
     };
 
+    var icongreen = {
+        url: "/images/Pompebledgreen.png",
+        scaledSize: new google.maps.Size(35, 35), // scaled size
+        origin: new google.maps.Point(0, 0), // origin
+        anchor: new google.maps.Point(0, 0) // anchor
+    };
+
     var icon2 = {
         url: "/images/Pompebled.png",
         scaledSize: new google.maps.Size(35, 35), // scaled size
@@ -30,7 +37,7 @@ function initMap() {
         draggable: false,
         icon: icon
     });
-
+    var pompebled = icon2;
     $('#meldingen[data-lat]').each(function () {
 
         var latdata = $(this).data('lat');
@@ -38,9 +45,17 @@ function initMap() {
         var Name = $(this).data('name');
         var Beschrijving = $(this).data('beschrijving');
         var Img = $(this).data('img');
-
+        var gearchiveerd = $(this).data('gearchiveerd');
         var id = $(this).data('id');
-        
+
+        var naam;
+        if (gearchiveerd == "True") {
+            pompebled = icongreen;
+            naam = Name + '(opgelost)';
+        } else {
+            naam = Name
+            var pompebled = icon2;
+        }
 
         var url = "https://morfriesland20180329110629.azurewebsites.net/beheer/details/" + id;
 
@@ -50,14 +65,14 @@ function initMap() {
             if (Img !== "/uploads/" + Name + "/") {
                 content = "<div class='col-md-12 nopadding'><div class='col-md-4 nopadding'><img class='meldfoto' style='max-width: 100%;' src='" + Img + "'></div><div class='col-md-8 infobeschrijving'><b>" + Name + "</b><br/>" + Beschrijving + "<br/> <a href='" + url + "'>Bekijk melding</a> </div></div>";
             } else {
-                content = "<div class='col-md-12 nopadding'><b>" + Name + "</b><br/>" + Beschrijving + "<br/> <a href='" + url + "'>Bekijk melding</a> </div>";
+                content = "<div class='col-md-12 nopadding'><b>" + naam + "</b><br/>" + Beschrijving + "<br/> <a href='" + url + "'>Bekijk melding</a> </div>";
             }
         } else {
             content = "";
             if (Img !== "/uploads/" + Name + "/") {
                 content = "<div class='col-md-12 nopadding'><div class='col-md-4 nopadding'><img class='meldfoto' style='max-width: 100%;' src='" + Img + "'></div><div class='col-md-8 infobeschrijving'><b>" + Name + "</b><br/>" + Beschrijving + "</div></div>";
             } else {
-                content = "<div class='col-md-12 nopadding'><b>" + Name + "</b><br/>" + Beschrijving + "</div>";
+                content = "<div class='col-md-12 nopadding'><b>" + naam + "</b><br/>" + Beschrijving + "</div>";
             }
         }
 
@@ -69,7 +84,7 @@ function initMap() {
             position: { lat: latdata, lng: lngdata },
             title: 'Melding',
             map: map,
-            icon: icon2
+            icon: pompebled
 
         });
 

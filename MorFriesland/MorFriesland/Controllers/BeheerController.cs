@@ -33,10 +33,27 @@ namespace MorFriesland.Controllers
         public async Task<IActionResult> Index(string SearchString, bool gearchiveerd)
         {
 
+            ViewBag.search = SearchString;
+            if(SearchString == null)
+            {
+                ViewBag.select = "Alle meldingen";
+            }
+            else
+            {
+                ViewBag.select = SearchString;
+            }
+            ViewBag.gearchiveerd = gearchiveerd;
+
             DateTime nu = DateTime.Now;
             nu = nu.AddDays(-1);
 
-            ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Naam", "Naam");
+            var selectlist = from x in _context.Categorie
+                             where x.Naam != SearchString
+                             select x;
+
+
+
+            ViewData["Categorie_Id"] = new SelectList(selectlist, "Naam", "Naam");
             //var applicationDbContext = _context.Melding.Include(m => m.Categorie).Include(m => m.Melder);
 
             var applicationDbContext = _context.Melding.Include(m => m.Categorie).Include(m => m.Melder);
@@ -45,29 +62,30 @@ namespace MorFriesland.Controllers
                             where x.Opgelosttijd > nu || x.Opgelosttijd == null
                             select x;
 
+            ViewBag.gearchiveerd = "false";
 
-                if ((gearchiveerd == true) && (!String.IsNullOrWhiteSpace(SearchString)))
+
+
+            if ((gearchiveerd == true) && (!String.IsNullOrWhiteSpace(SearchString)))
                 {
                     meldingen = from x in applicationDbContext
                                 select x;
+                    ViewBag.gearchiveerd = "true";
 
-                    meldingen = meldingen.Where(s => s.Naam.Contains(SearchString));
+
+                meldingen = meldingen.Where(s => s.Naam.Contains(SearchString));
                 }
                 else if (!String.IsNullOrWhiteSpace(SearchString))
                 {
                     meldingen = meldingen.Where(s => s.Naam.Contains(SearchString));
                 } else if (gearchiveerd == true)
                 {
-                    meldingen = from x in applicationDbContext
+                ViewBag.gearchiveerd = "true";
+
+                meldingen = from x in applicationDbContext
                             select x;
 
             }
-
-         
-            
-
-
-
 
             return View(await meldingen.ToListAsync());
         }
@@ -192,6 +210,7 @@ namespace MorFriesland.Controllers
                 var timezone = TimeZoneInfo.FindSystemTimeZoneById("Central Europe Standard Time");
                 var dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, timezone);
                 melding.Opgelosttijd = dateTime;
+                melding.Gearchiveerd = true;
                 try
                 {
                     _context.Update(melding);

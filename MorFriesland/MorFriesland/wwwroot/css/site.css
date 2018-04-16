@@ -91,8 +91,12 @@
     color: #fff;
     background-color: #244994;
 }
+button.btn.btn-success.meldingbutton{
+    background-color: #5cb85c;
+}
 
-.btn.btn-default.meldingbutton {
+
+.btn.meldingbutton {
     background-color: #244994;
     border-radius: 5px;
     margin-right: 10px;
@@ -100,8 +104,11 @@
     padding: 8px 25px !important;
     color: #fff;
 }
+button.btn.btn-success.meldingbutton:hover{
+    border-color: transparent;
+}
 
-.btn.btn-default.meldingbutton:hover {
+.btn.meldingbutton:hover {
     color: #ffffff;
     background-color: #2d59b4;
 }
@@ -117,6 +124,11 @@
 
 .title {
     font-weight: bold;
+}
+
+svg.svg-inline--fa.fa-check.fa-w-16 {
+    color: green;
+}
 }
 
 #infowindow-content {
