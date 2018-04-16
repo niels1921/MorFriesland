@@ -13,12 +13,10 @@ getLocation();
 function getLocation() {
 
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(SetPosistion); 
+        navigator.geolocation.getCurrentPosition(SetPosistion);
     }
-    else {
-        defaultMap();
-        initNavigator();
-    }
+    initNavigator();
+
 }
 
 function initNavigator() {
