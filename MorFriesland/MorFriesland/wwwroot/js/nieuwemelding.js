@@ -117,7 +117,7 @@ $(document).ready(function () {
                 } else {
                     form.submit();
                 }
-            })
+            });
         });
 
     });
@@ -194,11 +194,11 @@ function SetPosistion(position) {
         var id = $(this).data('id');
 
         var naam;
-        if (gearchiveerd == "True") {
+        if (gearchiveerd === "True") {
             pompebled = icongreen;
             naam = Name + ' (opgelost)';
         } else {
-            naam = Name
+            naam = Name;
             var pompebled = icon2;
         }
 
@@ -304,7 +304,7 @@ function defaultMap() {
     var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 10,
         center: fryslan
-    })
+    });
     var icon = {
         url: "/images/Pompebledblauw.png",
         scaledSize: new google.maps.Size(35, 35), // scaled size
