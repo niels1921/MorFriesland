@@ -11,29 +11,55 @@
     <meta name="viewport" content="width=device-width" />
     <title>Index</title>
 </head>
-<p>
 
-    <a class="btn btn-default meldingbutton" asp-action="Redirect">Bronhouders</a>
-</p>
 
 <body>
     <div class="row search">
+    <div class="col-md-12">
+        <form asp-controller="Beheer" asp-action="Index" method="get" id="meldingen">
+            @if (ViewBag.gearchiveerd == "true")
+            {
+                <input type="hidden" name="gearchiveerd" value="false" />
+                <input type="hidden" name="SearchString" value="@ViewBag.search" />
+                <button class="btn btn-default meldingbutton" type="submit">Onopgeloste meldingen</button>
 
-        <div class="col-lg-6">
-            <form asp-controller="Beheer" asp-action="Index" method="get" id="SearchString">
-                <label><input type="checkbox" name="gearchiveerd" value="true" id="checkboxfilter" /> Alle meldingen</label>
+            }
+            else
+            {
+                <input type="hidden" name="gearchiveerd" value="true" />
+                <input type="hidden" name="SearchString" value="@ViewBag.search" />
+                <button class="btn btn-success meldingbutton" type="submit">Opgeloste meldingen</button>
 
+            }
+
+        </form>
+    </div>
+        </div>
+
+    <div class="row search">
+
+        <div class="col-lg-5">
+            <form asp-controller="Beheer" asp-route-returnUrl="@ViewData["ReturnUrl"]" asp-action="Index" method="get" id="SearchString">
                 <div class="input-group">
-                    
+                    <input type="hidden" name="gearchiveerd" value="@ViewBag.gearchiveerd" />
                     <select name="SearchString" class="form-control" asp-items="ViewBag.Categorie_Id">
-                        <option value="">Alle meldingen</option>
-                        <option value="NOT NULL">Opgeloste meldingen</option>
+                        @if (ViewBag.select == "Alle meldingen")
+                        {
+                            <option value="">Alle meldingen</option>
+
+                        }
+                        else
+                        {
+                            <option value="@ViewBag.select">@ViewBag.select</option>
+                            <option value="">Alle meldingen</option>
+
+                        }
+
+
+
                     </select>
 
-
-
                     <span class="input-group-btn">
-
 
                         <button class="btn btn-default" type="submit">Filter</button>
                     </span>
@@ -41,6 +67,11 @@
             </form>
 
         </div><!-- /.col-lg-6 -->
+        <div class="pull-right">
+
+            <a class="btn btn-default meldingbutton" asp-action="Redirect">Bronhouders</a>
+
+        </div>
     </div>
     <div class="row">
         <div class="col-md-5">
@@ -60,40 +91,47 @@
                     </thead>
                     <tbody>
                         @foreach (var item in Model)
-                {
+                        {
 
-                    <tr>
+                            <tr>
 
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Categorie.Naam)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Beschrijving)
-                        </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Categorie.Naam)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Beschrijving)
+                                </td>
 
-                        <td>
-                            <a asp-action="Details" asp-route-id="@item.Id">Beheer</a>
-                        </td>
-                    </tr>
-                    <div id="meldingen" style="display: none;" data-lat="@item.Lat" data-lng="@item.Long" data-name="@item.Naam" data-img="/uploads/@item.Naam/@item.Foto" data-beschrijving="@item.Beschrijving" data-id="@item.Id"></div>
+                                <td>
+                                    <a asp-action="Details" asp-route-id="@item.Id">Beheer</a>
+                                </td>
+                                <td>
+                                    @if (item.Gearchiveerd == true)
+                                    {
+                                        <i class="fas fa-check" title="Opgelost"></i>
+                                    }
 
-        }
+                                </td>
+                            </tr>
+                            <div id="meldingen" style="display: none;" data-lat="@item.Lat" data-lng="@item.Long" data-name="@item.Naam" data-img="/uploads/@item.Naam/@item.Foto" data-beschrijving="@item.Beschrijving" data-id="@item.Id" data-gearchiveerd="@item.Gearchiveerd"></div>
+
+                        }
                     </tbody>
                 </table>
-                </div>
-            </div>
-            <div class="col-md-7">
-                <input id="pac-input" class="controls" type="text"
-                       placeholder="Zoek een locatie">
-                <div class="nieuwemap" id="map"></div>
-                <div id="infowindow-content">
-                    <span id="place-name" class="title"></span><br>
-
-                    <span id="place-address"></span>
-                </div>
-                <script src="~/js/allemeldingen.js"></script>
-                <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCK3VEpVPHSGvBnYuGfLUYYtj1MnJ4rPWg&libraries=places&callback=initMap" async defer></script>
             </div>
         </div>
+        <div class="col-md-7">
+            <input id="pac-input" class="controls" type="text"
+                   placeholder="Zoek een locatie">
+            <div class="nieuwemap" id="map"></div>
+            <div id="infowindow-content">
+                <span id="place-name" class="title"></span><br>
+
+                <span id="place-address"></span>
+            </div>
+            <script src="~/js/allemeldingen.js"></script>
+            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCK3VEpVPHSGvBnYuGfLUYYtj1MnJ4rPWg&libraries=places&callback=initMap" async defer></script>
+        </div>
+    </div>
 </body>
 </html>

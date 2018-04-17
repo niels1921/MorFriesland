@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Authorization;
-using System.Net.Mail;
+ using System.Net.Mail;
 using SendGrid.Helpers.Mail;
 using SendGrid;
 
@@ -30,13 +30,30 @@ namespace MorFriesland.Controllers
         }
 
         // GET: Beheer
-        public async Task<IActionResult> Index(string SearchString, bool gearchiveerd, DateTime? Opgelosttijd)
+        public async Task<IActionResult> Index(string SearchString, bool gearchiveerd)
         {
+
+            ViewBag.search = SearchString;
+            if(SearchString == null)
+            {
+                ViewBag.select = "Alle meldingen";
+            }
+            else
+            {
+                ViewBag.select = SearchString;
+            }
+            ViewBag.gearchiveerd = gearchiveerd;
 
             DateTime nu = DateTime.Now;
             nu = nu.AddDays(-1);
 
-            ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Naam", "Naam");
+            var selectlist = from x in _context.Categorie
+                             where x.Naam != SearchString
+                             select x;
+
+
+
+            ViewData["Categorie_Id"] = new SelectList(selectlist, "Naam", "Naam");
             //var applicationDbContext = _context.Melding.Include(m => m.Categorie).Include(m => m.Melder);
 
             var applicationDbContext = _context.Melding.Include(m => m.Categorie).Include(m => m.Melder);
@@ -45,31 +62,29 @@ namespace MorFriesland.Controllers
                             where x.Opgelosttijd > nu || x.Opgelosttijd == null
                             select x;
 
-            var opgelost = from y in applicationDbContext
-                           where y.Opgelosttijd != null
-                           select y;
+            ViewBag.gearchiveerd = "false";
+
 
 
             if ((gearchiveerd == true) && (!String.IsNullOrWhiteSpace(SearchString)))
-            {
+                {
+                    meldingen = from x in applicationDbContext
+                                select x;
+                    ViewBag.gearchiveerd = "true";
+
+
+                meldingen = meldingen.Where(s => s.Naam.Contains(SearchString));
+                }
+                else if (!String.IsNullOrWhiteSpace(SearchString))
+                {
+                    meldingen = meldingen.Where(s => s.Naam.Contains(SearchString));
+                } else if (gearchiveerd == true)
+                {
+                ViewBag.gearchiveerd = "true";
+
                 meldingen = from x in applicationDbContext
                             select x;
 
-                meldingen = meldingen.Where(s => s.Naam.Contains(SearchString));
-            }
-            else if (!String.IsNullOrWhiteSpace(SearchString))
-            {
-                meldingen = meldingen.Where(s => s.Naam.Contains(SearchString));
-            }
-            else if (gearchiveerd == true)
-            {
-                meldingen = from x in applicationDbContext
-                            select x;
-            }
-            else if (Opgelosttijd != null)
-            {
-                opgelost = from y in applicationDbContext
-                           select y;
             }
 
             return View(await meldingen.ToListAsync());
@@ -149,7 +164,7 @@ namespace MorFriesland.Controllers
             if (id != melding.Id)
             {
                 return NotFound();
-            }
+            }         
 
             if (ModelState.IsValid)
             {
@@ -195,6 +210,7 @@ namespace MorFriesland.Controllers
                 var timezone = TimeZoneInfo.FindSystemTimeZoneById("Central Europe Standard Time");
                 var dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, timezone);
                 melding.Opgelosttijd = dateTime;
+                melding.Gearchiveerd = true;
                 try
                 {
                     _context.Update(melding);
@@ -224,7 +240,7 @@ namespace MorFriesland.Controllers
                     var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
                     var response = await client.SendEmailAsync(msg);
                 }
-
+               
             }
 
             return RedirectToAction(nameof(Index));
@@ -247,7 +263,7 @@ namespace MorFriesland.Controllers
             {
                 return NotFound();
             }
-
+            
             return View(melding);
         }
 
@@ -269,7 +285,7 @@ namespace MorFriesland.Controllers
             return _context.Melding.Any(e => e.Id == id);
         }
 
-
+        
         public ActionResult Redirect()
         {
             return RedirectToAction(nameof(BronhouderController.Index), "Bronhouder");

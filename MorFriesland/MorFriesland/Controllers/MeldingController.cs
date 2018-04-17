@@ -111,13 +111,22 @@ namespace MorFriesland.Controllers
         // GET: Melding/Create
         public IActionResult Index()
         {
+
+
             ViewData["Categorie_Id"] = new SelectList(_context.Set<Categorie>(), "Id", "Naam");
             ViewData["User_id"] = new SelectList(_context.Users, "Id", "Id");
 
             MeldingVM meldingen = new MeldingVM();
 
-            var Meldingen = from Melding in _context.Melding
-                        select Melding;
+            DateTime nu = DateTime.Now;
+            nu = nu.AddDays(-1);
+
+            var applicationDbContext = _context.Melding.Include(m => m.Categorie).Include(m => m.Melder);
+
+
+            var Meldingen = from x in applicationDbContext
+                            where x.Opgelosttijd > nu || x.Opgelosttijd == null
+                            select x;
 
             meldingen.Meldingen = Meldingen;
 
