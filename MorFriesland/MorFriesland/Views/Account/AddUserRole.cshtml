@@ -8,19 +8,27 @@
 
 <h4>Voeg rollen aan gebruikers toe</h4>
 <hr />
+<form asp-controller="Account" method="get">
+    @if (ViewBag.x == false)
+    {
+        <label>Geen match</label>
+    }
+    <p>
+        Zoek gebruikersnaam: <input type="text" name="SearchString">
+        <input type="submit" value="Zoek" />
+    </p>
+</form>
 <div class="row">
     <div class="col-md-4">
         <form asp-action="AddUserRole">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label>Gebruikersnaam</label>
-                <select asp-for="UserName" class="form-control" asp-items="ViewBag.UserName"></select>
-                
+            <select asp-for="UserName" class="form-control" asp-items="@ViewBag.UserName"></select>
             </div>
             <div class="form-group">
                 <label>Rol</label>
                 <select asp-for="Name" class="form-control" asp-items="ViewBag.Name"></select>
-                
             </div>
             <div class="form-group">
                 <input type="submit" value="Rol toevoegen" class="btn btn-default" />

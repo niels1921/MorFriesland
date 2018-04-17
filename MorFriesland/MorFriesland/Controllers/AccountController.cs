@@ -11,6 +11,8 @@ using MorFriesland.Services;
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace MorFriesland.Controllers
 {
@@ -452,10 +454,33 @@ namespace MorFriesland.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public IActionResult AddUserRole()
+        public IActionResult AddUserRole(string SearchString)
         {
-            ViewData["UserName"] = new SelectList(_context.Users, "UserName", "UserName");
+            bool x = true;
+            var User = from m in _context.Users
+                       select m.UserName;            
+
+            if (!String.IsNullOrWhiteSpace(SearchString))
+            {
+                User = User.Where(s => s.Contains(SearchString));
+                if(User.Count() == 0)
+                {
+                    ViewData["UserName"] = new SelectList(_context.Users);
+                    x = false;
+                }
+                else
+                {
+                    ViewData["UserName"] = new SelectList(User);
+                    x = true;
+                }
+            }
+            else
+            {
+                ViewData["UserName"] = new SelectList(_context.Users);
+            }
             ViewData["Name"] = new SelectList(_context.Roles, "Name", "Name");
+            ViewData["x"] = x;
+
             return View();
 
         }
@@ -465,6 +490,8 @@ namespace MorFriesland.Controllers
         { 
             ApplicationUser user = await _userManager.FindByEmailAsync(username);
 
+           
+
             if (!await _userManager.IsInRoleAsync(user, name))
             { 
                  IdentityResult result = await _userManager.AddToRoleAsync(user, name);
@@ -472,6 +499,7 @@ namespace MorFriesland.Controllers
 
             ViewData["UserName"] = new SelectList(_context.Users, "UserName", "UserName");
             ViewData["Name"] = new SelectList(_context.Roles, "Name", "Name");
+
             return RedirectToAction(nameof(ManageController.Index),"Manage");
         }
 
