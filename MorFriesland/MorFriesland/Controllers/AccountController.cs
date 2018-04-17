@@ -11,9 +11,8 @@ using MorFriesland.Services;
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Hosting;
+using System.Linq;
 
 namespace MorFriesland.Controllers
 {
@@ -453,33 +452,45 @@ namespace MorFriesland.Controllers
 
         
 
-        //// GET: AddUserRole
+        [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddUserRole(string searchString)
+        public IActionResult AddUserRole(string SearchString)
         {
+            bool x = true;
+            var User = from m in _context.Users
+                       select m.UserName;            
 
-            ViewData["UserName"] = new SelectList(_context.Users, "UserName", "UserName");
-            ViewData["Name"] = new SelectList(_context.Roles, "Name", "Name");
-
-            var applicationDBcontext = _context.Users.Include(m => m.UserName);
-
-            var username1 = from m in _context.Users.Include(m => m.UserName)
-                            select m;
-
-            if (!String.IsNullOrEmpty(searchString))
+            if (!String.IsNullOrWhiteSpace(SearchString))
             {
-                username1 = username1.Where(s => s.Email.Contains(searchString));
+                User = User.Where(s => s.Contains(SearchString));
+                if(User.Count() == 0)
+                {
+                    ViewData["UserName"] = new SelectList(_context.Users);
+                    x = false;
+                }
+                else
+                {
+                    ViewData["UserName"] = new SelectList(User);
+                    x = true;
+                }
             }
-          
-            return View(await(username1.ToListAsync()));
+            else
+            {
+                ViewData["UserName"] = new SelectList(_context.Users);
+            }
+            ViewData["Name"] = new SelectList(_context.Roles, "Name", "Name");
+            ViewData["x"] = x;
+
+            return View();
 
         }
 
         [HttpPost]
         public async Task<IActionResult> AddUserRole(string username, string name)
-        {           
-
+        { 
             ApplicationUser user = await _userManager.FindByEmailAsync(username);
+
+           
 
             if (!await _userManager.IsInRoleAsync(user, name))
             { 
@@ -488,6 +499,7 @@ namespace MorFriesland.Controllers
 
             ViewData["UserName"] = new SelectList(_context.Users, "UserName", "UserName");
             ViewData["Name"] = new SelectList(_context.Roles, "Name", "Name");
+
             return RedirectToAction(nameof(ManageController.Index),"Manage");
         }
 
