@@ -457,12 +457,12 @@ namespace MorFriesland.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddUserRole(string searchString)
         {
-
+            
             ViewData["UserName"] = new SelectList(_context.Users, "UserName", "UserName");
             ViewData["Name"] = new SelectList(_context.Roles, "Name", "Name");
 
             var applicationDBcontext = _context.Users.Include(m => m.UserName);
-
+            string iets = _context.Users.Include(m => m.UserName).ToString();
             var username1 = from m in _context.Users.Include(m => m.UserName)
                             select m;
 
@@ -471,7 +471,7 @@ namespace MorFriesland.Controllers
                 username1 = username1.Where(s => s.Email.Contains(searchString));
             }
           
-            return View(await(username1.ToListAsync()));
+            return View();
 
         }
 
