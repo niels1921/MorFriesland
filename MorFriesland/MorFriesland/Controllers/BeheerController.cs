@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Authorization;
- using System.Net.Mail;
+using System.Net.Mail;
 using SendGrid.Helpers.Mail;
 using SendGrid;
 
@@ -30,7 +30,7 @@ namespace MorFriesland.Controllers
         }
 
         // GET: Beheer
-        public async Task<IActionResult> Index(string SearchString, bool gearchiveerd)
+        public async Task<IActionResult> Index(string SearchString, bool gearchiveerd, DateTime? Opgelosttijd)
         {
 
             DateTime nu = DateTime.Now;
@@ -45,29 +45,32 @@ namespace MorFriesland.Controllers
                             where x.Opgelosttijd > nu || x.Opgelosttijd == null
                             select x;
 
+            var opgelost = from y in applicationDbContext
+                           where y.Opgelosttijd != null
+                           select y;
 
-                if ((gearchiveerd == true) && (!String.IsNullOrWhiteSpace(SearchString)))
-                {
-                    meldingen = from x in applicationDbContext
-                                select x;
 
-                    meldingen = meldingen.Where(s => s.Naam.Contains(SearchString));
-                }
-                else if (!String.IsNullOrWhiteSpace(SearchString))
-                {
-                    meldingen = meldingen.Where(s => s.Naam.Contains(SearchString));
-                } else if (gearchiveerd == true)
-                {
-                    meldingen = from x in applicationDbContext
+            if ((gearchiveerd == true) && (!String.IsNullOrWhiteSpace(SearchString)))
+            {
+                meldingen = from x in applicationDbContext
                             select x;
 
+                meldingen = meldingen.Where(s => s.Naam.Contains(SearchString));
             }
-
-         
-            
-
-
-
+            else if (!String.IsNullOrWhiteSpace(SearchString))
+            {
+                meldingen = meldingen.Where(s => s.Naam.Contains(SearchString));
+            }
+            else if (gearchiveerd == true)
+            {
+                meldingen = from x in applicationDbContext
+                            select x;
+            }
+            else if (Opgelosttijd != null)
+            {
+                opgelost = from y in applicationDbContext
+                           select y;
+            }
 
             return View(await meldingen.ToListAsync());
         }
@@ -146,7 +149,7 @@ namespace MorFriesland.Controllers
             if (id != melding.Id)
             {
                 return NotFound();
-            }         
+            }
 
             if (ModelState.IsValid)
             {
@@ -221,7 +224,7 @@ namespace MorFriesland.Controllers
                     var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
                     var response = await client.SendEmailAsync(msg);
                 }
-               
+
             }
 
             return RedirectToAction(nameof(Index));
@@ -244,7 +247,7 @@ namespace MorFriesland.Controllers
             {
                 return NotFound();
             }
-            
+
             return View(melding);
         }
 
@@ -266,7 +269,7 @@ namespace MorFriesland.Controllers
             return _context.Melding.Any(e => e.Id == id);
         }
 
-        
+
         public ActionResult Redirect()
         {
             return RedirectToAction(nameof(BronhouderController.Index), "Bronhouder");

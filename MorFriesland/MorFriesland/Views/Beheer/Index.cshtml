@@ -24,9 +24,10 @@
                 <label><input type="checkbox" name="gearchiveerd" value="true" id="checkboxfilter" /> Alle meldingen</label>
 
                 <div class="input-group">
-
+                    
                     <select name="SearchString" class="form-control" asp-items="ViewBag.Categorie_Id">
                         <option value="">Alle meldingen</option>
+                        <option value="NOT NULL">Opgeloste meldingen</option>
                     </select>
 
 

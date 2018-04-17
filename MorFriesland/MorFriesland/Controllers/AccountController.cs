@@ -11,6 +11,9 @@ using MorFriesland.Services;
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Hosting;
 
 namespace MorFriesland.Controllers
 {
@@ -450,19 +453,32 @@ namespace MorFriesland.Controllers
 
         
 
-        [HttpGet]
+        //// GET: AddUserRole
         [Authorize(Roles = "Admin")]
-        public IActionResult AddUserRole()
+        public async Task<IActionResult> AddUserRole(string searchString)
         {
+
             ViewData["UserName"] = new SelectList(_context.Users, "UserName", "UserName");
             ViewData["Name"] = new SelectList(_context.Roles, "Name", "Name");
-            return View();
+
+            var applicationDBcontext = _context.Users.Include(m => m.UserName);
+
+            var username1 = from m in _context.Users.Include(m => m.UserName)
+                            select m;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                username1 = username1.Where(s => s.Email.Contains(searchString));
+            }
+          
+            return View(await(username1.ToListAsync()));
 
         }
 
         [HttpPost]
         public async Task<IActionResult> AddUserRole(string username, string name)
-        { 
+        {           
+
             ApplicationUser user = await _userManager.FindByEmailAsync(username);
 
             if (!await _userManager.IsInRoleAsync(user, name))
