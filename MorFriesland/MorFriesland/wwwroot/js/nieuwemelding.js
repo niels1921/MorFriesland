@@ -3,10 +3,16 @@
 
 
 
-var locationstring = "";
-
-
+var locationstring;
+var geocoder;
+var map;
 var url = "";
+var Locationmarker;
+var icon;
+var icon2;
+var icongreen;
+var latlng;
+
 
 getLocation();
 
@@ -15,171 +21,86 @@ function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(SetPosistion);
     }
-    initNavigator();
-
+    else {
+        // Browser doesn't support Geolocation
+        initMap();
+    }
 }
-
-function initNavigator() {
-        
-    navigator.permissions.query({ name: 'geolocation' })
-        .then(function (permissionStatus) {
-            if (permissionStatus.state === "denied") {
-                defaultMap();
-            } else if (permissionStatus.state === "prompt") {
-                defaultMap();
-            }
-
-
-            permissionStatus.onchange = function () {
-                if (this.state === "denied") {
-                    defaultMap();
-                }
-            };
-        });
-}
-
-
-
-
 //Laad de map in
 function initMap() {
-
-}
-
-
-
-var latlng;
-
-function toggleBounce() {
-    var geocoder = new google.maps.Geocoder;
-    var infowindow = new google.maps.InfoWindow;
-
-
-    var latlngStr = latlng.split(',', 2);
-    var loc = { lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1]) };
-
-    geocodeLatLng(geocoder, map, infowindow);
-
-    function geocodeLatLng(geocoder, map, infowindow) {
-
-        geocoder.geocode({ 'location': loc }, function (results, status) {
-            infowindow.setContent(results[0].formatted_address);
-            infowindow.open(map, Locationmarker);
-        });
-    }
-
-}
-
-
-
-function Ondrag(event) {
-
-    lat = event.latLng.lat();
-    lng = event.latLng.lng();
-
-    $("#nieuwlat").val(lat);
-    $("#nieuwlong").val(lng);
-
-
-    latlng = lat + "," + lng;
-
-    url = "https://geodata.nationaalgeoregister.nl/locatieserver/v3/free?lat=" + lat + "&lon=" + lng;
-
-
-
-
-}
-
-$(document).ready(function () {
-    $("body").on("click", "#meldingsubmit", function () {
-
-        $(".loader").show();
-
-        if ($("#validatie").is("span.text-danger.field-validation-error")) {
-            $(".loader").hide();
-
-        }
-
-        form = $("#submit");
-
-        var gemeentenaam = "";
-
-        $.getJSON(url, function (result) {
-            $.each(result, function (i, field) {
-
-                gemeentenaam = field.docs[0].gemeentenaam;
-
-                $("#gemeente").val(gemeentenaam);
-                if (field.docs[0].provincienaam !== "Friesland") {
-                    alert("U kunt helaas geen melding doen buiten Friesland");
-                    $(".loader").hide();
-
-                } else {
-                    form.submit();
-                }
-            });
-        });
-
-    });
-
-});
-
-
-function SetPosistion(position) {
-
-
-
-    lat = position.coords.latitude;
-    lng = position.coords.longitude;
-
-    latlng = lat + "," + lng;
-
-    url = "https://geodata.nationaalgeoregister.nl/locatieserver/v3/free?lat=" + lat + "&lon=" + lng;
-
-    $("#nieuwlat").val(lat);
-    $("#nieuwlong").val(lng);
-    var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 16,
-        center: { lat: lat, lng: lng }
-    });
-    var icon = {
+    icon = {
         url: "/images/Pompebledblauw.png",
         scaledSize: new google.maps.Size(35, 35), // scaled size
         origin: new google.maps.Point(0, 0), // origin
         anchor: new google.maps.Point(0, 0) // anchor
     };
-    var icongreen = {
+    icongreen = {
         url: "/images/Pompebledgreen.png",
         scaledSize: new google.maps.Size(30, 30), // scaled size
         origin: new google.maps.Point(0, 0), // origin
         anchor: new google.maps.Point(0, 0) // anchor
     };
-    var icon2 = {
+    icon2 = {
         url: "/images/Pompebled.png",
         scaledSize: new google.maps.Size(30, 30), // scaled size
         origin: new google.maps.Point(0, 0), // origin
         anchor: new google.maps.Point(0, 0) // anchor
     };
 
-
-
-
+    locationstring = new google.maps.InfoWindow();
+    geocoder = new google.maps.Geocoder;
+    var fryslan = { lat: 53.1641642, lng: 5.7817542 };
+    map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 10,
+        center: fryslan
+    })
     Locationmarker = new google.maps.Marker({
         map: map,
         draggable: true,
         animation: google.maps.Animation.DROP,
-        position: { lat: position.coords.latitude, lng: position.coords.longitude },
+        position: fryslan,
         icon: icon
     });
-    Locationmarker.addListener('click', toggleBounce);
+
+    Locationmarker.addListener('click', reversegeo);
     Locationmarker.addListener('drag', Ondrag);
     Locationmarker.addListener('dragend', Ondrag);
+    Locationmarker.addListener('dragend', reversegeo);
 
-    locationstring = new google.maps.InfoWindow({
-        content: "Uw locatie"
+    var input = document.getElementById('pac-input');
+
+    var autocomplete = new google.maps.places.Autocomplete(input);
+    autocomplete.bindTo('bounds', map);
+
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+    autocomplete.addListener('place_changed', function () {
+
+    locationstring.close();
+    var place = autocomplete.getPlace();
+     if (!place.geometry) {
+            return;
+     }
+
+    if (place.geometry.viewport) {
+        map.fitBounds(place.geometry.viewport);
+     } else {
+       map.setCenter(place.geometry.location);
+       map.setZoom(17);
+    }
+        // Set the position of the marker using the place ID and location.
+        Locationmarker.setPosition(place.geometry.location);
+
+        $("#nieuwlat").val(place.geometry.location.lat());
+        $("#nieuwlong").val(place.geometry.location.lng());
+
+        latlng = place.geometry.location.lat() + "," + place.geometry.location.lng();
+
+        url = "https://geodata.nationaalgeoregister.nl/locatieserver/v3/free?lat=" + place.geometry.location.lat() + "&lon=" + place.geometry.location.lng();
+
+        var geocoder = new google.maps.Geocoder;
+        geocodeLatLng(geocoder, map, locationstring);
     });
-
-    locationstring.open(map, Locationmarker);
 
     var pompebled = icon2;
     $('#meldingen[data-lat]').each(function () {
@@ -194,11 +115,11 @@ function SetPosistion(position) {
         var id = $(this).data('id');
 
         var naam;
-        if (gearchiveerd === "True") {
+        if (gearchiveerd == "True") {
             pompebled = icongreen;
             naam = Name + ' (opgelost)';
         } else {
-            naam = Name;
+            naam = Name
             var pompebled = icon2;
         }
 
@@ -244,156 +165,95 @@ function SetPosistion(position) {
         });
 
     });
+}
 
-    var input = document.getElementById('pac-input');
+function reversegeo() {
 
-    var autocomplete = new google.maps.places.Autocomplete(input);
-    autocomplete.bindTo('bounds', map);
-
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
-    var infowindow = new google.maps.InfoWindow();
-    var infowindowContent = document.getElementById('infowindow-content');
-    infowindow.setContent(infowindowContent);
-
-
-    autocomplete.addListener('place_changed', function () {
-
-
-
-        infowindow.close();
-        var place = autocomplete.getPlace();
-        if (!place.geometry) {
-            return;
-        }
-
-        if (place.geometry.viewport) {
-            map.fitBounds(place.geometry.viewport);
-        } else {
-            map.setCenter(place.geometry.location);
-            map.setZoom(17);
-        }
-
-        // Set the position of the marker using the place ID and location.
-        Locationmarker.setPosition(place.geometry.location);
-
-
-
-        infowindowContent.children['place-name'].textContent = place.name;
-        infowindowContent.children['place-address'].textContent =
-            place.formatted_address;
-        infowindow.open(map, Locationmarker);
-
-
-
-        $("#nieuwlat").val(place.geometry.location.lat());
-        $("#nieuwlong").val(place.geometry.location.lng());
-
-        latlng = place.geometry.location.lat() + "," + place.geometry.location.lng();
-
-        url = "https://geodata.nationaalgeoregister.nl/locatieserver/v3/free?lat=" + place.geometry.location.lat() + "&lon=" + place.geometry.location.lng();
-
-    });
+    geocodeLatLng(geocoder, map, locationstring);
 
 }
 
+function geocodeLatLng(geocoder, map, locationstring) {
 
- 
-function defaultMap() {
-    var fryslan = { lat: 53.1641642, lng: 5.7817542 };
-    var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 10,
-        center: fryslan
+    var latlngStr = latlng.split(',', 2);
+    var loc = { lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1]) };
+    geocoder.geocode({ 'location': loc }, function (results, status) {
+        locationstring.setContent(results[0].formatted_address);
+        locationstring.open(map, Locationmarker);
     });
-    var icon = {
-        url: "/images/Pompebledblauw.png",
-        scaledSize: new google.maps.Size(35, 35), // scaled size
-        origin: new google.maps.Point(0, 0), // origin
-        anchor: new google.maps.Point(0, 0) // anchor
-    };
+}
 
-    var icon2 = {
-        url: "/images/Pompebled.png",
-        scaledSize: new google.maps.Size(35, 35), // scaled size
-        origin: new google.maps.Point(0, 0), // origin
-        anchor: new google.maps.Point(0, 0) // anchor
-    };
 
-    Locationmarker = new google.maps.Marker({
-        map: map,
-        draggable: true,
-        animation: google.maps.Animation.DROP,
-        position: fryslan,
-        icon: icon
-    });
-    Locationmarker.addListener('click', toggleBounce);
-    Locationmarker.addListener('drag', Ondrag);
-    Locationmarker.addListener('dragend', Ondrag);
 
-    $('#meldingen[data-lat]').each(function () {
+function Ondrag(event) {
 
-        var latdata = $(this).data('lat');
-        var lngdata = $(this).data('lng');
+    lat = event.latLng.lat();
+    lng = event.latLng.lng();
 
-        var marker = new google.maps.Marker({
-            position: { lat: latdata, lng: lngdata },
-            title: 'Home Center',
-            map: map,
-            icon: icon2
+    $("#nieuwlat").val(lat);
+    $("#nieuwlong").val(lng);
 
+    latlng = lat + "," + lng;
+
+    url = "https://geodata.nationaalgeoregister.nl/locatieserver/v3/free?lat=" + lat + "&lon=" + lng;
+}
+
+$(document).ready(function () {
+    $("body").on("click", "#meldingsubmit", function () {
+
+        $(".loader").show();
+
+        if ($("#validatie").is("span.text-danger.field-validation-error")) {
+            $(".loader").hide();
+        }
+
+        form = $("#submit");
+
+        var gemeentenaam = "";
+
+        $.getJSON(url, function (result) {
+            $.each(result, function (i, field) {
+
+                gemeentenaam = field.docs[0].gemeentenaam;
+
+                $("#gemeente").val(gemeentenaam);
+                if (field.docs[0].provincienaam !== "Friesland") {
+                    alert("U kunt helaas geen melding doen buiten Friesland");
+                    $(".loader").hide();
+
+                } else {
+                    form.submit();
+                }
+            })
         });
 
     });
 
-    var input = document.getElementById('pac-input');
-
-    var autocomplete = new google.maps.places.Autocomplete(input);
-    autocomplete.bindTo('bounds', map);
-
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
-    var infowindow = new google.maps.InfoWindow();
-    var infowindowContent = document.getElementById('infowindow-content');
-    infowindow.setContent(infowindowContent);
+});
 
 
-    autocomplete.addListener('place_changed', function () {
+function SetPosistion(position) {
 
 
 
-        infowindow.close();
-        var place = autocomplete.getPlace();
-        if (!place.geometry) {
-            return;
-        }
+    lat = position.coords.latitude;
+    lng = position.coords.longitude;
 
-        if (place.geometry.viewport) {
-            map.fitBounds(place.geometry.viewport);
-        } else {
-            map.setCenter(place.geometry.location);
-            map.setZoom(17);
-        }
+    latlng = lat + "," + lng;
 
-        // Set the position of the marker using the place ID and location.
-        Locationmarker.setPosition(place.geometry.location);
+    url = "https://geodata.nationaalgeoregister.nl/locatieserver/v3/free?lat=" + lat + "&lon=" + lng;
 
+    $("#nieuwlat").val(lat);
+    $("#nieuwlong").val(lng);
 
+    var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
-        infowindowContent.children['place-name'].textContent = place.name;
-        infowindowContent.children['place-address'].textContent =
-            place.formatted_address;
-        infowindow.open(map, Locationmarker);
+    map.setCenter(pos);
+    map.setZoom(16);
 
+    Locationmarker.setPosition(pos);
 
+    var geocoder = new google.maps.Geocoder;
+    geocodeLatLng(geocoder, map, locationstring);
 
-
-        $("#nieuwlat").val(place.geometry.location.lat());
-        $("#nieuwlong").val(place.geometry.location.lng());
-
-
-        latlng = place.geometry.location.lat() + "," + place.geometry.location.lng();
-
-
-
-    });
-}
+ }
